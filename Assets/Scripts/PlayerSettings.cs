@@ -7,4 +7,7 @@ public class PlayerSettings : ScriptableObject
 {
     public float verticalSpeed = 5f;
     public float horizontalSpeed = 5f;
+
+    [Header("Attack Cooldowns")]
+    public float punchCooldown = 0.3f;
 }

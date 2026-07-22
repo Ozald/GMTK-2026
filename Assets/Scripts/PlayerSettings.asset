@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   verticalSpeed: 5
   horizontalSpeed: 5
+  punchCooldown: 0.3
