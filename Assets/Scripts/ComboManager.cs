@@ -1,120 +1,122 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ComboManager : MonoBehaviour
 {
     #region Variables
-    [Header("General")]
+
+    [Header("Data")]
+    public ComboData comboData;
+
+
+    [Header("Runtime")]
     public int currentCombo;
     public ComboGrade comboGrade;
 
+
     public enum ComboGrade
     {
-        F, D, C, B, A, S, SS, SSS
+        None,
+        F,
+        D,
+        C,
+        B,
+        A,
+        S,
+        SS,
+        SSS
     }
 
-    [Header("GradeScale")]
-    public int sssGrade = 450;
-    public int ssGrade = 300;
-    public int sGrade = 200;
-    public int aGrade = 120;
-    public int bGrade = 80;
-    public int cGrade = 60;
-    public int dGrade = 40;
-    public int fGrade = 20;
 
-
-
-    [Header("Intervals")]
-    public float decayInterval = 1f;
-    public float defaultDecayInterval = 1f;
-    public float minimumDecayInterval = 0.2f;
-    public float speedIncreaseRate = 0.1f;
-    public float inactivityDelay = 5f;
-
-    [Header("Timer")]
+    [Header("Timers")]
     public float decayTimer;
     public float inactivityTimer;
 
+    public float decayInterval;
+
     #endregion
 
-    #region General Function
+    #region General
+    private void Start()
+    {
+        decayInterval = comboData.defaultDecayInterval;
+
+        UpdateGrade();
+    }
+
     private void Update()
     {
         decayTimer += Time.deltaTime;
         inactivityTimer += Time.deltaTime;
 
-        if (inactivityTimer >= inactivityDelay)
+
+        if (inactivityTimer >= comboData.inactivityDelay)
         {
-            decayInterval -= speedIncreaseRate * Time.deltaTime;
-            decayInterval = Mathf.Max(minimumDecayInterval, decayInterval);
+            decayInterval -= comboData.speedIncreaseRate * Time.deltaTime;
+
+            decayInterval = Mathf.Max(comboData.minimumDecayInterval,decayInterval);
         }
+
 
         if (decayTimer >= decayInterval)
         {
             decayTimer = 0f;
+
             ComboReduce(1);
         }
     }
     #endregion
 
     #region Combo Helpers
-    public void ComboReduce(int amount)
-    {
-        currentCombo = Mathf.Max(0, currentCombo - amount);
-
-        UpdateGrade();
-    }
-
     public void ComboAdd(int amount)
     {
         currentCombo += amount;
 
         inactivityTimer = 0f;
-        decayInterval = defaultDecayInterval;
+        decayInterval = comboData.defaultDecayInterval;
+
+        UpdateGrade();
+    }
+
+    public void ComboReduce(int amount)
+    {
+        currentCombo = Mathf.Max(0,currentCombo - amount);
+
 
         UpdateGrade();
     }
 
     private void UpdateGrade()
     {
-        if (currentCombo >= sssGrade)
-        {
+        if (currentCombo >= comboData.sssGrade)
             comboGrade = ComboGrade.SSS;
-        }
-        else if (currentCombo >= ssGrade)
-        {
+
+        else if (currentCombo >= comboData.ssGrade)
             comboGrade = ComboGrade.SS;
-        }
-        else if (currentCombo >= sGrade)
-        {
+
+        else if (currentCombo >= comboData.sGrade)
             comboGrade = ComboGrade.S;
-        }
-        else if (currentCombo >= aGrade)
-        {
+
+        else if (currentCombo >= comboData.aGrade)
             comboGrade = ComboGrade.A;
-        }
-        else if (currentCombo >= bGrade)
-        {
+
+        else if (currentCombo >= comboData.bGrade)
             comboGrade = ComboGrade.B;
-        }
-        else if (currentCombo >= cGrade)
-        {
+
+        else if (currentCombo >= comboData.cGrade)
             comboGrade = ComboGrade.C;
-        }
-        else if (currentCombo >= dGrade)
-        {
+
+        else if (currentCombo >= comboData.dGrade)
             comboGrade = ComboGrade.D;
-        }
-        else if (currentCombo >= fGrade)
-        {
+
+        else if (currentCombo >= comboData.fGrade)
             comboGrade = ComboGrade.F;
-        }
+
+        else
+            comboGrade = ComboGrade.None;
     }
     #endregion
 
-    #region Tick Down Rate Helpers
+    #region Decay Helpers
     public void SetRate(float amount)
     {
         decayInterval = amount;
@@ -128,7 +130,11 @@ public class ComboManager : MonoBehaviour
     public void RateDecrease(float amount)
     {
         decayInterval -= amount;
-        decayInterval = Mathf.Max(minimumDecayInterval, decayInterval);
+
+        decayInterval = Mathf.Max(
+            comboData.minimumDecayInterval,
+            decayInterval
+        );
     }
     #endregion
 }
