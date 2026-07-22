@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class ComboManager : MonoBehaviour
 {
+    #region Variables
     [Header("General")]
     public int currentCombo;
     public ComboGrade comboGrade;
@@ -36,6 +37,9 @@ public class ComboManager : MonoBehaviour
     public float decayTimer;
     public float inactivityTimer;
 
+    #endregion
+
+    #region General Function
     private void Update()
     {
         decayTimer += Time.deltaTime;
@@ -53,6 +57,7 @@ public class ComboManager : MonoBehaviour
             ComboReduce(1);
         }
     }
+    #endregion
 
     #region Combo Helpers
     public void ComboReduce(int amount)
