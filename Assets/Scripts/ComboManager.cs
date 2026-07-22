@@ -85,6 +85,25 @@ public class ComboManager : MonoBehaviour
         UpdateGrade();
     }
 
+    public float GetComboProgress()
+    {
+        ComboGrade nextGrade = GetNextGrade();
+
+        int nextRequirement = GetGradeRequirement(nextGrade);
+        int currentRequirement = GetGradeRequirement(comboGrade);
+
+        if (nextRequirement <= currentRequirement)
+            return 1f;
+
+        return Mathf.Clamp01(
+            (float)(currentCombo - currentRequirement) /
+            (nextRequirement - currentRequirement)
+        );
+
+    }
+    #endregion
+
+    #region Grade Helpers
     private void UpdateGrade()
     {
         if (currentCombo >= comboData.sssGrade)
@@ -114,6 +133,82 @@ public class ComboManager : MonoBehaviour
         else
             comboGrade = ComboGrade.None;
     }
+
+    public ComboGrade GetNextGrade()
+    {
+        int nextIndex = (int)comboGrade + 1;
+
+        if (nextIndex >= System.Enum.GetValues(typeof(ComboGrade)).Length)
+            return comboGrade;
+
+        return (ComboGrade)nextIndex;
+    }
+
+    public int GetComboNeededForNextGrade()
+    {
+        switch (GetNextGrade())
+        {
+            case ComboGrade.F:
+                return Mathf.Max(0, comboData.fGrade - currentCombo);
+
+            case ComboGrade.D:
+                return Mathf.Max(0, comboData.dGrade - currentCombo);
+
+            case ComboGrade.C:
+                return Mathf.Max(0, comboData.cGrade - currentCombo);
+
+            case ComboGrade.B:
+                return Mathf.Max(0, comboData.bGrade - currentCombo);
+
+            case ComboGrade.A:
+                return Mathf.Max(0, comboData.aGrade - currentCombo);
+
+            case ComboGrade.S:
+                return Mathf.Max(0, comboData.sGrade - currentCombo);
+
+            case ComboGrade.SS:
+                return Mathf.Max(0, comboData.ssGrade - currentCombo);
+
+            case ComboGrade.SSS:
+                return Mathf.Max(0, comboData.sssGrade - currentCombo);
+
+            default:
+                return 0;
+        }
+    }
+    public int GetGradeRequirement(ComboGrade grade)
+    {
+        switch (grade)
+        {
+            case ComboGrade.F:
+                return comboData.fGrade;
+
+            case ComboGrade.D:
+                return comboData.dGrade;
+
+            case ComboGrade.C:
+                return comboData.cGrade;
+
+            case ComboGrade.B:
+                return comboData.bGrade;
+
+            case ComboGrade.A:
+                return comboData.aGrade;
+
+            case ComboGrade.S:
+                return comboData.sGrade;
+
+            case ComboGrade.SS:
+                return comboData.ssGrade;
+
+            case ComboGrade.SSS:
+                return comboData.sssGrade;
+
+            default:
+                return 0;
+        }
+    }
+
     #endregion
 
     #region Decay Helpers
