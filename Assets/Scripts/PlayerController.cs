@@ -1,3 +1,4 @@
+using FMODUnity;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,7 +18,9 @@ public class PlayerController : MonoBehaviour
 
     public PlayerSettings playerSettings;
     public PlayerStates playerState;
-    
+
+    public EventReference onPunchEvent;
+
 
     // Start is called before the first frame update
     void Start()
@@ -77,6 +80,7 @@ public class PlayerController : MonoBehaviour
 
     public IEnumerator PunchCoroutine()
     {
+        RuntimeManager.PlayOneShot(onPunchEvent, transform.position);
         yield return new WaitForSeconds(playerSettings.punchCooldown);
 
         // TODO: Implement the attack logic here (e.g., play attack animation, detect enemies, etc.)
