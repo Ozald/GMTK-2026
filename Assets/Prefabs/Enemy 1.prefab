@@ -178,7 +178,9 @@ MonoBehaviour:
   laneTolerance: 0.25
   roamAmount: 0.3
   roamSpeed: 0.5
-  roamMoveSpeed: 1
+  roamMoveSpeed: 0.5
+  seperationDistance: 2
+  seperationStrength: 2
   waitingDistance: 3
   attackDistance: 1
   health: 5

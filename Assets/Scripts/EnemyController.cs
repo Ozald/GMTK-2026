@@ -28,6 +28,7 @@ public class EnemyController : MonoBehaviour
     public float roamAmount = 0.15f;
     public float roamSpeed = 0.5f;
     public float roamMoveSpeed = 0.5f;
+    private Vector3 roamOffset;
 
     float roamSide;
     float roamDistance;
@@ -121,64 +122,65 @@ public class EnemyController : MonoBehaviour
 
     public void WalkState()
     {
-        Debug.Log($"{name} is in WalkState");
-
         bool canAttack = enemyManager.CanEnemyAttack(this);
 
         float side = Mathf.Sign(transform.position.x - playerTransform.position.x);
 
-        float distanceFromPlayer;
+        float distanceFromPlayer = canAttack ? sideOffset : waitingDistance;
+
+        Vector3 targetPosition;
 
         if (canAttack)
         {
-            distanceFromPlayer = sideOffset;
+            // Attackers care about lane
+            targetPosition = playerTransform.position +
+                             Vector3.right * side * distanceFromPlayer;
+
+            targetPosition.y = playerTransform.position.y;
         }
         else
         {
-            distanceFromPlayer = waitingDistance;
+            // Waiting enemies only care about staying near the player
+            targetPosition = playerTransform.position +
+                             Vector3.right * side * distanceFromPlayer;
+
+            // Keep their current lane
+            targetPosition.y = transform.position.y;
         }
 
-        Vector3 targetPosition = playerTransform.position + Vector3.right * side * distanceFromPlayer;
-        targetPosition.z = playerTransform.position.z;
-        float laneDifference = Mathf.Abs(transform.position.z - playerTransform.position.z);
 
-        if (laneDifference > laneTolerance)
-        {
-            targetPosition = new Vector3(transform.position.x, transform.position.y, playerTransform.position.z);
-        }
-        else
-        {
-            //targetPosition = playerTransform.position + Vector3.right * side * sideOffset;
-            targetPosition.z = playerTransform.position.z;
-        }
+        float distance = Vector3.Distance(
+            transform.position,
+            targetPosition
+        );
 
-        float distance = Vector3.Distance(transform.position, targetPosition);
-
-        Debug.Log($"{name} Distance: {distance}");
 
         if (distance > stoppingDistance)
         {
-            transform.position = Vector3.MoveTowards(transform.position, targetPosition, speed * Time.deltaTime);
+            transform.position = Vector3.MoveTowards(
+                transform.position,
+                targetPosition,
+                speed * Time.deltaTime
+            );
         }
         else
         {
             rb.velocity = Vector2.zero;
 
-            Debug.Log($"{name} CanAttack = {enemyManager.CanEnemyAttack(this)}");
-
-
-            if (enemyManager.CanEnemyAttack(this))
+            if (canAttack)
             {
-                Debug.Log($"{name} -> ReadyToAttack");
                 enemyState = EnemyStates.ReadyToAttack;
             }
             else
             {
-                Debug.Log($"{name} -> Roaming");
-                homePosition = targetPosition;
-
-                roamSide = Mathf.Sign(transform.position.x - playerTransform.position.x);
+                roamSide = side;
                 roamDistance = waitingDistance;
+
+                roamOffset = new Vector3(
+                    Random.Range(-1f, 1f),
+                    Random.Range(-1f, 1f),
+                    0
+                );
 
                 enemyState = EnemyStates.Roaming;
             }
@@ -233,9 +235,15 @@ public class EnemyController : MonoBehaviour
 
         roamTarget = homePosition + new Vector3(0, offset, 0);
 
+        // Get pushed away from nearby enemies
+        Vector3 separation = GetSeperationForce();
+
+
+        Vector3 finalTarget = roamTarget + separation;
+
         transform.position = Vector3.MoveTowards(
             transform.position,
-            roamTarget,
+            finalTarget,
             roamMoveSpeed * Time.deltaTime
         );
 
@@ -299,5 +307,31 @@ public class EnemyController : MonoBehaviour
     void TakeDamage(int amount)
     {
         health -= amount;
+    }
+
+    Vector3 GetSeperationForce()
+    {
+        Vector3 force = Vector3.zero;
+
+        foreach(EnemyController enemy in allEnemies){
+            if (enemy == this)
+            {
+                continue;
+            }
+
+            float distance = Vector3.Distance(transform.position, enemy.transform.position);
+
+            if (distance < seperationDistance)
+            {
+                Vector3 away = transform.position - enemy.transform.position;
+
+                if (away != Vector3.zero)
+                {
+                    force += away.normalized * (seperationDistance - distance);
+                }
+            }
+        }
+
+        return force * seperationStrength;
     }
 }
