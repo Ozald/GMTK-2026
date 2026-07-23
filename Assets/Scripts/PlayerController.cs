@@ -7,6 +7,7 @@ public enum PlayerStates
 {
     Walk,
     Attack,
+    Dash
 }
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -32,8 +33,6 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
-
         stateTimer += Time.deltaTime;
         switch (playerState)
         {
@@ -42,6 +41,9 @@ public class PlayerController : MonoBehaviour
                 break;
             case PlayerStates.Attack:
                 AttackState();
+                break;
+            case PlayerStates.Dash:
+                DashState();
                 break;
         }
     }
@@ -72,6 +74,15 @@ public class PlayerController : MonoBehaviour
             currentAttack = playerSettings.punchAttack;
             playerState = PlayerStates.Attack;
         }
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            ResetState();
+            rb.velocity = Vector2.zero;
+
+            rb.AddForce(movement.normalized * playerSettings.dashForce, ForceMode2D.Impulse);
+            playerState = PlayerStates.Dash;
+        }
     }
 
     public void AttackState()
@@ -84,6 +95,15 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Z) && currentAttack.IsInComboWindow(stateTimer))
         {
             attackQueued = true;
+        }
+    }
+
+    public void DashState()
+    {
+        if (stateTimer >= playerSettings.dashDuration)
+        {
+            ResetState();
+            playerState = PlayerStates.Walk;
         }
     }
 

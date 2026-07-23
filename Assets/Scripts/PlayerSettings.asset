@@ -14,4 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   verticalSpeed: 5
   horizontalSpeed: 5
+  dashForce: 15
+  dashDuration: 0.3
   punchAttack: {fileID: 11400000, guid: ce54134a990086945bd39d0d4a6f2ed7, type: 2}

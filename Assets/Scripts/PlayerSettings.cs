@@ -8,6 +8,8 @@ public class PlayerSettings : ScriptableObject
 {
     public float verticalSpeed = 5f;
     public float horizontalSpeed = 5f;
+    public float dashForce = 5f;
+    public float dashDuration = 0.5f;
 
     [Header("Attacks")]
     [InspectorName("Z Key")] public AttackData punchAttack;
