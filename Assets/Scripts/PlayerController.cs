@@ -91,7 +91,7 @@ public class PlayerController : MonoBehaviour
 
     public IEnumerator AttackCoroutine()
     {
-        RuntimeManager.PlayOneShot(currentAttack.attackSound, transform.position);
+        AudioManager.PlayOneShot(currentAttack.attackSound);
 
         Debug.Log($"Attack: {currentAttack.animationTriggerName}");
 
