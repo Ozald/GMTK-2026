@@ -2,6 +2,7 @@ using FMODUnity;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.RuleTile.TilingRuleOutput;
 
 [CreateAssetMenu(fileName = "AttackData", menuName = "ScriptableObjects/Attack Data", order = 1)]
 public class AttackData : ScriptableObject
@@ -26,5 +27,14 @@ public class AttackData : ScriptableObject
         }
 
         return false;
+    }
+
+    public void Attack(PlayerController player)
+    {
+        player.transform.localScale = new Vector3(Input.GetAxisRaw("Horizontal") > 0 ? 1 : -1, 1, 1);
+
+        player.rb.AddForce((player.transform.right * player.transform.localScale.x).normalized * 5f, ForceMode2D.Impulse);
+
+        ComboManager.ComboAdd(1);
     }
 }

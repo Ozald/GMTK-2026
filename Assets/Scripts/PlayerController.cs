@@ -13,7 +13,7 @@ public enum PlayerStates
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerController : MonoBehaviour
 {
-    private Rigidbody2D rb;
+    [HideInInspector] public Rigidbody2D rb;
     private Coroutine attackCoroutine;
     private float stateTimer;
     private AttackData currentAttack;
@@ -95,6 +95,8 @@ public class PlayerController : MonoBehaviour
             rb.AddForce(movement.normalized * playerSettings.dashForce, ForceMode2D.Impulse);
             playerState = PlayerStates.Dash;
 
+            AudioManager.PlayOneShot(playerSettings.dashSound);
+
             return;
         }
     }
@@ -130,9 +132,7 @@ public class PlayerController : MonoBehaviour
         OverrideClip("DummyAttack", currentAttack.animation);
         animator.Play("AttackState", -1, 0f);
 
-        rb.AddForce((transform.right * transform.localScale.x).normalized * 5f, ForceMode2D.Impulse);
-
-        ComboManager.ComboAdd(1);
+        currentAttack.Attack(this);
         
         yield return new WaitForSeconds(currentAttack.comboWindowEnd);
 

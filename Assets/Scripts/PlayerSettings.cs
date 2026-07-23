@@ -1,3 +1,4 @@
+using FMODUnity;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -13,4 +14,7 @@ public class PlayerSettings : ScriptableObject
 
     [Header("Attacks")]
     [InspectorName("Z Key")] public AttackData punchAttack;
+
+    [Header("Audio")]
+    public EventReference dashSound;
 }

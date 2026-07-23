@@ -17,3 +17,10 @@ MonoBehaviour:
   dashForce: 15
   dashDuration: 0.3
   punchAttack: {fileID: 11400000, guid: ce54134a990086945bd39d0d4a6f2ed7, type: 2}
+  dashSound:
+    Guid:
+      Data1: -1477136988
+      Data2: 1128978466
+      Data3: -473867635
+      Data4: -1171959684
+    Path: event:/SFX/Dash
