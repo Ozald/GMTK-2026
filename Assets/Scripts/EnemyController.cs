@@ -44,6 +44,10 @@ public class EnemyController : MonoBehaviour
 
     public float health = 5;
     public float damage = 1;
+
+    public float attackAnimationLength = 0.3f;
+    public float attackCooldown = 0.5f;
+    public float attackWindUp = 0.3f;
     public EnemyStates enemyState;
 
     private Transform playerTransform;
@@ -267,7 +271,7 @@ public class EnemyController : MonoBehaviour
     public IEnumerator AttackCoroutine()
     {
         //RuntimeManager.PlayOneShot(onPunchEvent, transform.position);
-        yield return new WaitForSeconds(0.75f);
+        yield return new WaitForSeconds(attackAnimationLength);
 
         // TODO: Implement the attack logic here (e.g., play attack animation, detect enemies, etc.)
 
@@ -279,7 +283,7 @@ public class EnemyController : MonoBehaviour
 
     public IEnumerator WaitingCoroutine()
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(attackCooldown);
 
         enemyState = EnemyStates.Walk;
         waitCoroutine = null;
@@ -292,7 +296,7 @@ public class EnemyController : MonoBehaviour
             spriteRenderer.color = Color.yellow;
         }
 
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForSeconds(attackWindUp);
 
         if (spriteRenderer != null)
         {
