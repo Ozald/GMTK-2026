@@ -56,4 +56,23 @@ public class EnemyManager : MonoBehaviour
     {
         return enemy == rightSideEnemy || enemy == leftSideEnemy;
     }
+
+    public bool IsOtherEnemyAttacking(EnemyController currentEnemy)
+    {
+        if (leftSideEnemy != null &&
+            leftSideEnemy != currentEnemy &&
+            leftSideEnemy.enemyState == EnemyController.EnemyStates.Attack)
+        {
+            return true;
+        }
+
+        if (rightSideEnemy != null &&
+            rightSideEnemy != currentEnemy &&
+            rightSideEnemy.enemyState == EnemyController.EnemyStates.Attack)
+        {
+            return true;
+        }
+
+        return false;
+    }
 }

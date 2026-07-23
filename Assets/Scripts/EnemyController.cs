@@ -7,12 +7,18 @@ using UnityEngine.Playables;
 
 public class EnemyController : MonoBehaviour
 {
+    #region variables
+
     public static List<EnemyController> allEnemies = new List<EnemyController>();
     private EnemyManager enemyManager;
 
     public Coroutine waitCoroutine;
     public Coroutine attackCoroutine;
+    public Coroutine prepareCoroutine;
     public Rigidbody2D rb;
+
+    private SpriteRenderer spriteRenderer;
+    private Color originalColor;
 
     public float speed = 3.0f;
     public float stoppingDistance = 1.0f;
@@ -29,6 +35,9 @@ public class EnemyController : MonoBehaviour
     private Vector3 roamTarget;
     private Vector3 homePosition;
 
+    public float seperationDistance = 1.0f;
+    public float seperationStrength = 2.0f;
+
     public float waitingDistance = 4f;
     public float attackDistance = 1.2f;
 
@@ -37,10 +46,10 @@ public class EnemyController : MonoBehaviour
     public EnemyStates enemyState;
 
     private Transform playerTransform;
-
     public enum EnemyStates
     {
         Walk,
+        ReadyToAttack,
         PreparingAttack,
         Attack,
         Waiting,
@@ -48,7 +57,9 @@ public class EnemyController : MonoBehaviour
         Hit,
         Dead
     }
+    #endregion
 
+    #region General functions
     void OnEnable()
     {
         allEnemies.Add(this);
@@ -61,7 +72,15 @@ public class EnemyController : MonoBehaviour
 
     void Start()
     {
+
         rb = GetComponent<Rigidbody2D>();
+
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        if (spriteRenderer != null)
+        {
+            originalColor = spriteRenderer.color;
+        }
+
         GameObject player = GameObject.FindWithTag("Player");
         if(player != null)
         {
@@ -73,14 +92,10 @@ public class EnemyController : MonoBehaviour
 
     void Update()
     {
-
         switch (enemyState)
         {
             case EnemyStates.Walk:
                 WalkState();
-                break;
-            case EnemyStates.Attack:
-                AttackState();
                 break;
             case EnemyStates.Waiting:
                 WaitState();
@@ -88,11 +103,26 @@ public class EnemyController : MonoBehaviour
             case EnemyStates.Roaming:
                 RoamState();
                 break;
+            case EnemyStates.ReadyToAttack:
+                ReadyToAttackState();
+                break;
+            case EnemyStates.PreparingAttack:
+                PreparingAttackState();
+                break;
+            case EnemyStates.Attack:
+                AttackState();
+                break;
         }
     }
 
+    #endregion
+
+    #region States
+
     public void WalkState()
     {
+        Debug.Log($"{name} is in WalkState");
+
         bool canAttack = enemyManager.CanEnemyAttack(this);
 
         float side = Mathf.Sign(transform.position.x - playerTransform.position.x);
@@ -124,6 +154,8 @@ public class EnemyController : MonoBehaviour
 
         float distance = Vector3.Distance(transform.position, targetPosition);
 
+        Debug.Log($"{name} Distance: {distance}");
+
         if (distance > stoppingDistance)
         {
             transform.position = Vector3.MoveTowards(transform.position, targetPosition, speed * Time.deltaTime);
@@ -132,12 +164,17 @@ public class EnemyController : MonoBehaviour
         {
             rb.velocity = Vector2.zero;
 
+            Debug.Log($"{name} CanAttack = {enemyManager.CanEnemyAttack(this)}");
+
+
             if (enemyManager.CanEnemyAttack(this))
             {
-                enemyState = EnemyStates.Attack;
+                Debug.Log($"{name} -> ReadyToAttack");
+                enemyState = EnemyStates.ReadyToAttack;
             }
             else
             {
+                Debug.Log($"{name} -> Roaming");
                 homePosition = targetPosition;
 
                 roamSide = Mathf.Sign(transform.position.x - playerTransform.position.x);
@@ -156,9 +193,32 @@ public class EnemyController : MonoBehaviour
             return;
         }
 
+        if (enemyManager.IsOtherEnemyAttacking(this))
+        {
+            enemyState = EnemyStates.ReadyToAttack;
+            return;
+        }
+
         if (attackCoroutine == null)
         {
             attackCoroutine = StartCoroutine(AttackCoroutine());
+        }
+    }
+
+    public void ReadyToAttackState()
+    {
+        Debug.Log("I am Ready To Attack");
+        if (!enemyManager.IsOtherEnemyAttacking(this))
+        {
+            enemyState = EnemyStates.PreparingAttack;
+        }
+    }
+
+    public void PreparingAttackState()
+    {
+        if (prepareCoroutine == null)
+        {
+            prepareCoroutine = StartCoroutine(PreparingAttackCoroutine());
         }
     }
 
@@ -186,6 +246,16 @@ public class EnemyController : MonoBehaviour
         }
     }
 
+    public void WaitState()
+    {
+        if (waitCoroutine == null)
+        {
+            waitCoroutine = StartCoroutine(WaitingCoroutine());
+        }
+    }
+    #endregion
+
+    #region Coroutines
     public IEnumerator AttackCoroutine()
     {
         //RuntimeManager.PlayOneShot(onPunchEvent, transform.position);
@@ -197,21 +267,34 @@ public class EnemyController : MonoBehaviour
         attackCoroutine = null;
     }
 
-    public void WaitState()
-    {
-        if (waitCoroutine == null)
-        {
-            waitCoroutine = StartCoroutine(WaitingCoroutine());
-        }
-    }
+    
 
     public IEnumerator WaitingCoroutine()
     {
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(0.5f);
 
         enemyState = EnemyStates.Walk;
         waitCoroutine = null;
     }
+
+    public IEnumerator PreparingAttackCoroutine()
+    {
+        if (spriteRenderer != null)
+        {
+            spriteRenderer.color = Color.yellow;
+        }
+
+        yield return new WaitForSeconds(0.3f);
+
+        if (spriteRenderer != null)
+        {
+            spriteRenderer.color = originalColor;
+        }
+
+        enemyState = EnemyStates.Attack;
+        prepareCoroutine = null;
+    }
+    #endregion
 
     void TakeDamage(int amount)
     {
