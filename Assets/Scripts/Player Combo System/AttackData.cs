@@ -7,7 +7,7 @@ using UnityEngine;
 public class AttackData : ScriptableObject
 {
     [Header("Attack FX")]
-    public string animationTriggerName;
+    public AnimationClip animation;
     public EventReference attackSound;
 
     [Header("Attack Properties")]
