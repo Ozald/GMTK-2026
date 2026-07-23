@@ -4,6 +4,8 @@ public class ComboManager : MonoBehaviour
 {
     #region Variables
 
+    public static ComboManager Instance { get; private set; }
+
     [Header("Data")]
     public ComboData comboData;
 
@@ -36,6 +38,12 @@ public class ComboManager : MonoBehaviour
     #endregion
 
     #region General
+    private void Awake()
+    {
+        if (Instance == null)
+            Instance = this;
+    }
+
     private void Start()
     {
         decayInterval = comboData.defaultDecayInterval;
@@ -67,22 +75,22 @@ public class ComboManager : MonoBehaviour
     #endregion
 
     #region Combo Helpers
-    public void ComboAdd(int amount)
+    public static void ComboAdd(int amount)
     {
-        currentCombo += amount;
+        Instance.currentCombo += amount;
 
-        inactivityTimer = 0f;
-        decayInterval = comboData.defaultDecayInterval;
+        Instance.inactivityTimer = 0f;
+        Instance.decayInterval = Instance.comboData.defaultDecayInterval;
 
-        UpdateGrade();
+        Instance.UpdateGrade();
     }
 
-    public void ComboReduce(int amount)
+    public static void ComboReduce(int amount)
     {
-        currentCombo = Mathf.Max(0,currentCombo - amount);
+        Instance.currentCombo = Mathf.Max(0, Instance.currentCombo - amount);
 
 
-        UpdateGrade();
+        Instance.UpdateGrade();
     }
 
     public float GetComboProgress()

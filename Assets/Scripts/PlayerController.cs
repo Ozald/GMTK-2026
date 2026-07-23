@@ -6,25 +6,25 @@ using UnityEngine;
 public enum PlayerStates
 {
     Walk,
-    Punch,
-    Punch_Again
+    Attack,
 }
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerController : MonoBehaviour
 {
     private Rigidbody2D rb;
-    private Coroutine punchCoroutine;
+    private Coroutine attackCoroutine;
+    private float stateTimer;
+    private AttackData currentAttack;
+    private bool attackQueued;
 
     public PlayerSettings playerSettings;
     public PlayerStates playerState;
 
-    public EventReference onPunchEvent;
-
-
     // Start is called before the first frame update
     void Start()
     {
+        ResetState();
         rb = GetComponent<Rigidbody2D>();
         playerState = PlayerStates.Walk;
     }
@@ -32,13 +32,16 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
+
+        stateTimer += Time.deltaTime;
         switch (playerState)
         {
             case PlayerStates.Walk:
                 WalkState();
                 break;
-            case PlayerStates.Punch:
-                PunchState();
+            case PlayerStates.Attack:
+                AttackState();
                 break;
         }
     }
@@ -52,7 +55,7 @@ public class PlayerController : MonoBehaviour
 
         Vector2 movement = new Vector2(moveHorizontal * playerSettings.horizontalSpeed, moveVertical * playerSettings.verticalSpeed);
 
-        if (!Mathf.Approximately(moveHorizontal, 0f) || !Mathf.Approximately(moveVertical, 0f))
+        if (movement.sqrMagnitude > 0.01)
         {
             rb.velocity = movement;
         }
@@ -63,29 +66,65 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Z))
         {
+            ResetState();
+
             rb.velocity = Vector2.zero;
-            playerState = PlayerStates.Punch;
+            currentAttack = playerSettings.punchAttack;
+            playerState = PlayerStates.Attack;
         }
     }
 
-    public void PunchState()
+    public void AttackState()
     {
-        if (punchCoroutine == null)
+        if (attackCoroutine == null)
         {
-            punchCoroutine = StartCoroutine(PunchCoroutine());
+            attackCoroutine = StartCoroutine(AttackCoroutine());
+        }
+
+        if (Input.GetKeyDown(KeyCode.Z) && currentAttack.IsInComboWindow(stateTimer))
+        {
+            attackQueued = true;
         }
     }
 
     /********************************************************************************************/
 
-    public IEnumerator PunchCoroutine()
+    public IEnumerator AttackCoroutine()
     {
-        RuntimeManager.PlayOneShot(onPunchEvent, transform.position);
-        yield return new WaitForSeconds(playerSettings.punchCooldown);
+        RuntimeManager.PlayOneShot(currentAttack.attackSound, transform.position);
+
+        Debug.Log($"Attack: {currentAttack.animationTriggerName}");
 
         // TODO: Implement the attack logic here (e.g., play attack animation, detect enemies, etc.)
+        // THE FOLLOW LINE IS PLACEHOLDER BEHAVIOR ONLY
+        ComboManager.ComboAdd(1);
 
+        yield return new WaitForSeconds(currentAttack.comboWindowEnd);
+
+        
+        stateTimer = 0f;
+        if (attackQueued && currentAttack.nextAttack != null)
+        {
+            AttackData nextAttack = currentAttack.nextAttack;
+
+            ResetState();
+
+            currentAttack = nextAttack;
+            playerState = PlayerStates.Attack;
+
+            yield break;
+        }
+
+        ResetState();
         playerState = PlayerStates.Walk;
-        punchCoroutine = null;
+        
+    }
+
+    private void ResetState()
+    {
+        stateTimer = 0f;
+        attackQueued = false;
+        currentAttack = null;
+        attackCoroutine = null;
     }
 }

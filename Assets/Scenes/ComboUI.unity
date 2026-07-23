@@ -215,6 +215,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 413241472}
+  - component: {fileID: 413241473}
   m_Layer: 0
   m_Name: ComboManager
   m_TagString: Untagged
@@ -237,6 +238,24 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &413241473
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 413241471}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45a729837acbd7e4fa53cfc0f70303b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  comboData: {fileID: 11400000, guid: d06c24e3590cfc140ae62e23e6477f97, type: 2}
+  currentCombo: 0
+  comboGrade: 0
+  decayTimer: 0
+  inactivityTimer: 0
+  decayInterval: 0
 --- !u!1 &414110698
 GameObject:
   m_ObjectHideFlags: 0
@@ -896,13 +915,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerSettings: {fileID: 11400000, guid: 1424582a23db16244ab15dafd33ee94f, type: 2}
   playerState: 0
-  onPunchEvent:
-    Guid:
-      Data1: -1892861660
-      Data2: 1094499542
-      Data3: -1718585202
-      Data4: 151581229
-    Path: event:/SFX/Punch
 --- !u!212 &1815300572
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1503,6 +1515,7 @@ GameObject:
   - component: {fileID: 2118549874}
   - component: {fileID: 2118549876}
   - component: {fileID: 2118549875}
+  - component: {fileID: 2118549877}
   m_Layer: 5
   m_Name: Image
   m_TagString: Untagged
@@ -1568,6 +1581,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2118549873}
   m_CullTransparentMesh: 1
+--- !u!114 &2118549877
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2118549873}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95d8c02c00384db46a2fa47392243c08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  radialIndicatorUI: {fileID: 2118549875}
+  comboText: {fileID: 1056817428}
+  comboManager: {fileID: 413241473}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "PlayerSettings", menuName = "ScriptableObjects/Player Settings", order = 1)]
@@ -8,6 +9,6 @@ public class PlayerSettings : ScriptableObject
     public float verticalSpeed = 5f;
     public float horizontalSpeed = 5f;
 
-    [Header("Attack Cooldowns")]
-    public float punchCooldown = 0.3f;
+    [Header("Attacks")]
+    [InspectorName("Z Key")] public AttackData punchAttack;
 }
