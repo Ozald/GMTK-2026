@@ -10,7 +10,7 @@ public class EnemyController : MonoBehaviour
     #region variables
 
     public static List<EnemyController> allEnemies = new List<EnemyController>();
-    private EnemyManager enemyManager;
+    protected EnemyManager enemyManager;
 
     public Coroutine waitCoroutine;
     public Coroutine attackCoroutine;
@@ -50,7 +50,7 @@ public class EnemyController : MonoBehaviour
     public float attackWindUp = 0.3f;
     public EnemyStates enemyState;
 
-    private Transform playerTransform;
+    protected Transform playerTransform;
     public enum EnemyStates
     {
         Walk,
@@ -62,20 +62,34 @@ public class EnemyController : MonoBehaviour
         Hit,
         Dead
     }
+
+    public enum EnemyType
+    {
+        Melee,
+        Ranged,
+    }
+
+    public EnemyType enemyType;
     #endregion
 
     #region General functions
     void OnEnable()
     {
-        allEnemies.Add(this);
+        if (enemyType == EnemyType.Melee)
+        {
+            allEnemies.Add(this);
+        }
     }
 
     void OnDisable()
     {
-        allEnemies.Remove(this);
+        if (enemyType == EnemyType.Melee)
+        {
+            allEnemies.Remove(this);
+        }
     }
 
-    void Start()
+    protected virtual void Start()
     {
 
         rb = GetComponent<Rigidbody2D>();
@@ -124,7 +138,7 @@ public class EnemyController : MonoBehaviour
 
     #region States
 
-    public void WalkState()
+    protected virtual void WalkState()
     {
         bool canAttack = enemyManager.CanEnemyAttack(this);
 
@@ -193,16 +207,19 @@ public class EnemyController : MonoBehaviour
 
     public void AttackState()
     {
-        if (!enemyManager.CanEnemyAttack(this))
+        if (enemyType == EnemyType.Melee)
         {
-            enemyState = EnemyStates.Walk;
-            return;
-        }
+            if (!enemyManager.CanEnemyAttack(this))
+            {
+                enemyState = EnemyStates.Walk;
+                return;
+            }
 
-        if (enemyManager.IsOtherEnemyAttacking(this))
-        {
-            enemyState = EnemyStates.ReadyToAttack;
-            return;
+            if (enemyManager.IsOtherEnemyAttacking(this))
+            {
+                enemyState = EnemyStates.ReadyToAttack;
+                return;
+            }
         }
 
         if (attackCoroutine == null)
@@ -213,8 +230,14 @@ public class EnemyController : MonoBehaviour
 
     public void ReadyToAttackState()
     {
-        Debug.Log("I am Ready To Attack");
-        if (!enemyManager.IsOtherEnemyAttacking(this))
+        if (enemyType == EnemyType.Melee)
+        {
+            if (!enemyManager.IsOtherEnemyAttacking(this))
+            {
+                enemyState = EnemyStates.PreparingAttack;
+            }
+        }
+        else if (enemyType == EnemyType.Ranged)
         {
             enemyState = EnemyStates.PreparingAttack;
         }
@@ -268,7 +291,7 @@ public class EnemyController : MonoBehaviour
     #endregion
 
     #region Coroutines
-    public IEnumerator AttackCoroutine()
+    protected virtual IEnumerator AttackCoroutine()
     {
         //RuntimeManager.PlayOneShot(onPunchEvent, transform.position);
         yield return new WaitForSeconds(attackAnimationLength);
