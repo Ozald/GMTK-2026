@@ -10,7 +10,9 @@ public class EnemyController : MonoBehaviour
     #region variables
 
     public static List<EnemyController> allEnemies = new List<EnemyController>();
-    private EnemyManager enemyManager;
+    public static List<EnemyController> allMeleeEnemies = new List<EnemyController>();
+
+    protected EnemyManager enemyManager;
 
     public Coroutine waitCoroutine;
     public Coroutine attackCoroutine;
@@ -44,9 +46,13 @@ public class EnemyController : MonoBehaviour
 
     public float health = 5;
     public float damage = 1;
+
+    public float attackAnimationLength = 0.3f;
+    public float attackCooldown = 0.5f;
+    public float attackWindUp = 0.3f;
     public EnemyStates enemyState;
 
-    private Transform playerTransform;
+    protected Transform playerTransform;
     public enum EnemyStates
     {
         Walk,
@@ -58,20 +64,37 @@ public class EnemyController : MonoBehaviour
         Hit,
         Dead
     }
+
+    public enum EnemyType
+    {
+        Melee,
+        Ranged,
+        Tank
+    }
+
+    public EnemyType enemyType;
     #endregion
 
     #region General functions
     void OnEnable()
     {
         allEnemies.Add(this);
+        if (enemyType == EnemyType.Melee || enemyType == EnemyType.Tank)
+        {
+            allMeleeEnemies.Add(this);
+        }
     }
-
     void OnDisable()
     {
         allEnemies.Remove(this);
+
+        if (enemyType == EnemyType.Melee || enemyType == EnemyType.Tank)
+        {
+            allMeleeEnemies.Remove(this);
+        }
     }
 
-    void Start()
+    protected virtual void Start()
     {
 
         rb = GetComponent<Rigidbody2D>();
@@ -93,6 +116,8 @@ public class EnemyController : MonoBehaviour
 
     void Update()
     {
+        FacePlayer();
+
         switch (enemyState)
         {
             case EnemyStates.Walk:
@@ -120,7 +145,7 @@ public class EnemyController : MonoBehaviour
 
     #region States
 
-    public void WalkState()
+    protected virtual void WalkState()
     {
         bool canAttack = enemyManager.CanEnemyAttack(this);
 
@@ -189,16 +214,19 @@ public class EnemyController : MonoBehaviour
 
     public void AttackState()
     {
-        if (!enemyManager.CanEnemyAttack(this))
+        if (enemyType == EnemyType.Melee || enemyType == EnemyType.Tank)
         {
-            enemyState = EnemyStates.Walk;
-            return;
-        }
+            if (!enemyManager.CanEnemyAttack(this))
+            {
+                enemyState = EnemyStates.Walk;
+                return;
+            }
 
-        if (enemyManager.IsOtherEnemyAttacking(this))
-        {
-            enemyState = EnemyStates.ReadyToAttack;
-            return;
+            if (enemyManager.IsOtherEnemyAttacking(this))
+            {
+                enemyState = EnemyStates.ReadyToAttack;
+                return;
+            }
         }
 
         if (attackCoroutine == null)
@@ -209,8 +237,14 @@ public class EnemyController : MonoBehaviour
 
     public void ReadyToAttackState()
     {
-        Debug.Log("I am Ready To Attack");
-        if (!enemyManager.IsOtherEnemyAttacking(this))
+        if (enemyType == EnemyType.Melee || enemyType == EnemyType.Tank)
+        {
+            if (!enemyManager.IsOtherEnemyAttacking(this))
+            {
+                enemyState = EnemyStates.PreparingAttack;
+            }
+        }
+        else if (enemyType == EnemyType.Ranged)
         {
             enemyState = EnemyStates.PreparingAttack;
         }
@@ -264,10 +298,10 @@ public class EnemyController : MonoBehaviour
     #endregion
 
     #region Coroutines
-    public IEnumerator AttackCoroutine()
+    protected virtual IEnumerator AttackCoroutine()
     {
         //RuntimeManager.PlayOneShot(onPunchEvent, transform.position);
-        yield return new WaitForSeconds(0.75f);
+        yield return new WaitForSeconds(attackAnimationLength);
 
         // TODO: Implement the attack logic here (e.g., play attack animation, detect enemies, etc.)
 
@@ -279,7 +313,7 @@ public class EnemyController : MonoBehaviour
 
     public IEnumerator WaitingCoroutine()
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(attackCooldown);
 
         enemyState = EnemyStates.Walk;
         waitCoroutine = null;
@@ -292,7 +326,7 @@ public class EnemyController : MonoBehaviour
             spriteRenderer.color = Color.yellow;
         }
 
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForSeconds(attackWindUp);
 
         if (spriteRenderer != null)
         {
@@ -313,7 +347,7 @@ public class EnemyController : MonoBehaviour
     {
         Vector3 force = Vector3.zero;
 
-        foreach(EnemyController enemy in allEnemies){
+        foreach(EnemyController enemy in allMeleeEnemies){
             if (enemy == this)
             {
                 continue;
@@ -333,5 +367,23 @@ public class EnemyController : MonoBehaviour
         }
 
         return force * seperationStrength;
+    }
+    protected void FacePlayer()
+    {
+        if (playerTransform == null)
+            return;
+
+        float direction = playerTransform.position.x - transform.position.x;
+
+        if (direction > 0)
+        {
+            // Player is to the right
+            transform.rotation = Quaternion.Euler(0, 0, 0);
+        }
+        else if (direction < 0)
+        {
+            // Player is to the left
+            transform.rotation = Quaternion.Euler(0, 180, 0);
+        }
     }
 }
