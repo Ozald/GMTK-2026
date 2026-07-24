@@ -1,30 +1,34 @@
-using System.Collections;
-using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Events;
-using TMPro;
 
 public class ComboBarUI : MonoBehaviour
 {
     public Image radialIndicatorUI;
-    public TextMeshProUGUI comboText;
+    public TextMeshProUGUI comboGradeText;
+    public TextMeshProUGUI comboNumberText;
     public ComboManager comboManager;
 
+    public float fillSpeed = 5f;
 
-    // Start is called before the first frame update
+    private float targetFillAmount;
+
     void Start()
     {
         comboManager = FindObjectOfType<ComboManager>();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        radialIndicatorUI.fillAmount = (float)(comboManager.GetComboProgress() * 0.75);
-        comboText.text = comboManager.comboGrade.ToString();
+        targetFillAmount = (float)comboManager.GetComboProgress();
+
+        radialIndicatorUI.fillAmount = Mathf.Lerp(
+            radialIndicatorUI.fillAmount,
+            targetFillAmount,
+            Time.deltaTime * fillSpeed
+        );
+
+        comboNumberText.text = comboManager.currentCombo.ToString();
+        comboGradeText.text = comboManager.comboGrade.ToString();
     }
 }
-
-
-

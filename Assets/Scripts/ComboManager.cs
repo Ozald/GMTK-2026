@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class ComboManager : MonoBehaviour
@@ -13,11 +14,11 @@ public class ComboManager : MonoBehaviour
     [Header("Runtime")]
     public int currentCombo;
     public ComboGrade comboGrade;
+    public ComboGrade displayGrade;
 
 
     public enum ComboGrade
     {
-        None,
         F,
         D,
         C,
@@ -35,21 +36,36 @@ public class ComboManager : MonoBehaviour
 
     public float decayInterval;
 
+
+    [Header("Rank Up")]
+    public float rankUpDelay = 0.5f;
+    public float rankUpImmunityDuration = 2f;
+
+    private float rankUpImmunityTimer;
+    private bool isRankingUp;
+
+    private ComboGrade pendingGrade;
+
     #endregion
 
+
     #region General
+
     private void Awake()
     {
         if (Instance == null)
             Instance = this;
     }
 
+
     private void Start()
     {
         decayInterval = comboData.defaultDecayInterval;
 
-        UpdateGrade();
+        comboGrade = CalculateGrade();
+        displayGrade = comboGrade;
     }
+
 
     private void Update()
     {
@@ -57,24 +73,42 @@ public class ComboManager : MonoBehaviour
         inactivityTimer += Time.deltaTime;
 
 
+        if (rankUpImmunityTimer > 0)
+        {
+            rankUpImmunityTimer -= Time.deltaTime;
+        }
+
+
         if (inactivityTimer >= comboData.inactivityDelay)
         {
             decayInterval -= comboData.speedIncreaseRate * Time.deltaTime;
 
-            decayInterval = Mathf.Max(comboData.minimumDecayInterval,decayInterval);
+            decayInterval = Mathf.Max(
+                comboData.minimumDecayInterval,
+                decayInterval
+            );
         }
 
 
-        if (decayTimer >= decayInterval)
+        // Stop decay during rank immunity
+        if (rankUpImmunityTimer <= 0)
         {
-            decayTimer = 0f;
+            if (decayTimer >= decayInterval)
+            {
+                decayTimer = 0f;
 
-            ComboReduce(1);
+                ComboReduce(1);
+            }
         }
     }
+
     #endregion
 
+
+
     #region Combo Helpers
+
+
     public static void ComboAdd(int amount)
     {
         Instance.currentCombo += amount;
@@ -82,79 +116,142 @@ public class ComboManager : MonoBehaviour
         Instance.inactivityTimer = 0f;
         Instance.decayInterval = Instance.comboData.defaultDecayInterval;
 
-        Instance.UpdateGrade();
+        Instance.CheckGradeChange();
     }
+
 
     public static void ComboReduce(int amount)
     {
-        Instance.currentCombo = Mathf.Max(0, Instance.currentCombo - amount);
+        Instance.currentCombo = Mathf.Max(
+            0,
+            Instance.currentCombo - amount
+        );
 
-
-        Instance.UpdateGrade();
+        Instance.CheckGradeChange();
     }
+
+
+
+    private void CheckGradeChange()
+    {
+        ComboGrade newGrade = CalculateGrade();
+
+
+        // Rank up
+        if (newGrade > displayGrade)
+        {
+            pendingGrade = newGrade;
+
+            if (!isRankingUp)
+                StartCoroutine(RankUpSequence());
+        }
+        else
+        {
+            comboGrade = newGrade;
+            displayGrade = newGrade;
+        }
+    }
+
+
+
+    private IEnumerator RankUpSequence()
+    {
+        isRankingUp = true;
+
+
+        // Your UI can animate the bar to full here
+        // while waiting
+
+        yield return new WaitForSeconds(rankUpDelay);
+
+
+
+        // Apply new rank
+        displayGrade = pendingGrade;
+        comboGrade = pendingGrade;
+
+
+        // Give immunity
+        rankUpImmunityTimer = rankUpImmunityDuration;
+
+
+        isRankingUp = false;
+    }
+
+
 
     public float GetComboProgress()
     {
-        ComboGrade nextGrade = GetNextGrade();
+        ComboGrade nextGrade = GetNextGrade(displayGrade);
+
 
         int nextRequirement = GetGradeRequirement(nextGrade);
-        int currentRequirement = GetGradeRequirement(comboGrade);
+        int currentRequirement = GetGradeRequirement(displayGrade);
+
 
         if (nextRequirement <= currentRequirement)
             return 1f;
+
 
         return Mathf.Clamp01(
             (float)(currentCombo - currentRequirement) /
             (nextRequirement - currentRequirement)
         );
-
     }
+
+
     #endregion
 
+
+
     #region Grade Helpers
-    private void UpdateGrade()
+
+
+    private ComboGrade CalculateGrade()
     {
         if (currentCombo >= comboData.sssGrade)
-            comboGrade = ComboGrade.SSS;
+            return ComboGrade.SSS;
 
         else if (currentCombo >= comboData.ssGrade)
-            comboGrade = ComboGrade.SS;
+            return ComboGrade.SS;
 
         else if (currentCombo >= comboData.sGrade)
-            comboGrade = ComboGrade.S;
+            return ComboGrade.S;
 
         else if (currentCombo >= comboData.aGrade)
-            comboGrade = ComboGrade.A;
+            return ComboGrade.A;
 
         else if (currentCombo >= comboData.bGrade)
-            comboGrade = ComboGrade.B;
+            return ComboGrade.B;
 
         else if (currentCombo >= comboData.cGrade)
-            comboGrade = ComboGrade.C;
+            return ComboGrade.C;
 
         else if (currentCombo >= comboData.dGrade)
-            comboGrade = ComboGrade.D;
+            return ComboGrade.D;
 
-        else if (currentCombo >= comboData.fGrade)
-            comboGrade = ComboGrade.F;
-
-        else
-            comboGrade = ComboGrade.None;
+        return ComboGrade.F;
     }
 
-    public ComboGrade GetNextGrade()
+
+
+    public ComboGrade GetNextGrade(ComboGrade grade)
     {
-        int nextIndex = (int)comboGrade + 1;
+        int nextIndex = (int)grade + 1;
+
 
         if (nextIndex >= System.Enum.GetValues(typeof(ComboGrade)).Length)
-            return comboGrade;
+            return grade;
+
 
         return (ComboGrade)nextIndex;
     }
 
+
+
     public int GetComboNeededForNextGrade()
     {
-        switch (GetNextGrade())
+        switch (GetNextGrade(displayGrade))
         {
             case ComboGrade.F:
                 return Mathf.Max(0, comboData.fGrade - currentCombo);
@@ -184,6 +281,9 @@ public class ComboManager : MonoBehaviour
                 return 0;
         }
     }
+
+
+
     public int GetGradeRequirement(ComboGrade grade)
     {
         switch (grade)
@@ -217,18 +317,24 @@ public class ComboManager : MonoBehaviour
         }
     }
 
+
     #endregion
 
+
+
     #region Decay Helpers
+
     public void SetRate(float amount)
     {
         decayInterval = amount;
     }
 
+
     public void RateIncrease(float amount)
     {
         decayInterval += amount;
     }
+
 
     public void RateDecrease(float amount)
     {
@@ -239,5 +345,6 @@ public class ComboManager : MonoBehaviour
             decayInterval
         );
     }
+
     #endregion
 }

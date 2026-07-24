@@ -12,3 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4898e224b04b1cc43b94260bc25eee4e, type: 3}
   m_Name: ComboData
   m_EditorClassIdentifier: 
+  sssGrade: 220
+  ssGrade: 160
+  sGrade: 110
+  aGrade: 70
+  bGrade: 40
+  cGrade: 20
+  dGrade: 10
+  fGrade: 0
+  defaultDecayInterval: 1
+  minimumDecayInterval: 0.2
+  speedIncreaseRate: 0.1
+  inactivityDelay: 5
