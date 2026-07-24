@@ -1,4 +1,4 @@
-using Unity.VisualScripting.Antlr3.Runtime;
+using System.Collections;
 using UnityEngine;
 
 public class PauseTransition : MonoBehaviour
@@ -17,6 +17,8 @@ public class PauseTransition : MonoBehaviour
     public Vector2 centerPosition;
     public Vector2 targetPosition;
 
+    private Coroutine settleCoroutine;
+
     private void Start()
     {
         centerPosition = panel.anchoredPosition;
@@ -34,7 +36,9 @@ public class PauseTransition : MonoBehaviour
             panel.anchoredPosition,
             targetPosition,
             ref velocity,
-            0.15f
+            0.15f,
+            Mathf.Infinity,
+            Time.unscaledDeltaTime
         );
 
         if (Input.GetKeyDown(KeyCode.P))
@@ -52,8 +56,10 @@ public class PauseTransition : MonoBehaviour
 
     public void Enter()
     {
-        isPauseOpen = true; 
-        // Go slightly past the center
+        isPauseOpen = true;
+
+        Time.timeScale = 0f;
+
         targetPosition = centerPosition + new Vector2(overshootAmount, 0);
 
         foreach (ButtonTransition button in buttons)
@@ -61,8 +67,16 @@ public class PauseTransition : MonoBehaviour
             button.Enter();
         }
 
-        // Come back after a short delay
-        Invoke(nameof(Settle), 0.25f);
+        if (settleCoroutine != null)
+            StopCoroutine(settleCoroutine);
+
+        settleCoroutine = StartCoroutine(SettleAfterDelay());
+    }
+
+    private IEnumerator SettleAfterDelay()
+    {
+        yield return new WaitForSecondsRealtime(0.25f);
+        Settle();
     }
 
     void Settle()
@@ -73,6 +87,11 @@ public class PauseTransition : MonoBehaviour
     public void Exit()
     {
         isPauseOpen = false;
+
+        Time.timeScale = 1f;
+
+        if (settleCoroutine != null)
+            StopCoroutine(settleCoroutine);
 
         targetPosition = centerPosition - new Vector2(offScreenDistance + overshootAmount, 0);
 

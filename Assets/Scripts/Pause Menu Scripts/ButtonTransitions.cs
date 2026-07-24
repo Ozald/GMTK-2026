@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class ButtonTransition : MonoBehaviour
@@ -13,7 +14,8 @@ public class ButtonTransition : MonoBehaviour
 
     private Vector2 velocity;
 
-    private bool entering;
+    private Coroutine enterCoroutine;
+    private Coroutine settleCoroutine;
 
     void Start()
     {
@@ -28,32 +30,39 @@ public class ButtonTransition : MonoBehaviour
 
     public void Enter()
     {
-        CancelInvoke();
+        if (enterCoroutine != null)
+            StopCoroutine(enterCoroutine);
 
-        Invoke(nameof(StartEnter), delay);
+        if (settleCoroutine != null)
+            StopCoroutine(settleCoroutine);
+
+        enterCoroutine = StartCoroutine(EnterRoutine());
     }
 
-    void StartEnter()
+    private IEnumerator EnterRoutine()
     {
-        entering = true;
+        yield return new WaitForSecondsRealtime(delay);
 
         targetPosition = startPosition + new Vector2(overshootAmount, 0);
 
-        Invoke(nameof(Settle), 0.15f);
+        settleCoroutine = StartCoroutine(SettleRoutine());
     }
 
-    void Settle()
+    private IEnumerator SettleRoutine()
     {
+        yield return new WaitForSecondsRealtime(0.15f);
+
         targetPosition = startPosition;
     }
 
     public void Exit()
     {
-        CancelInvoke();
+        if (enterCoroutine != null)
+            StopCoroutine(enterCoroutine);
 
-        entering = false;
+        if (settleCoroutine != null)
+            StopCoroutine(settleCoroutine);
 
-        // Slide away left
         targetPosition = startPosition - new Vector2(startOffset, 0);
     }
 
@@ -63,7 +72,9 @@ public class ButtonTransition : MonoBehaviour
             button.anchoredPosition,
             targetPosition,
             ref velocity,
-            0.15f
+            0.15f,
+            Mathf.Infinity,
+            Time.unscaledDeltaTime
         );
     }
 }

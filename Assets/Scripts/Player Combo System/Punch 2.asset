@@ -20,7 +20,7 @@ MonoBehaviour:
       Data3: -1718585202
       Data4: 151581229
     Path: event:/SFX/Punch
-  damage: 10
+  damage: 25
   comboWindowStart: 0.1
   comboWindowEnd: 0.3
   nextAttack: {fileID: 11400000, guid: 67aaaa505f9dce742b4746a49dc7ba00, type: 2}

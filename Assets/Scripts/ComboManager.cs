@@ -41,6 +41,18 @@ public class ComboManager : MonoBehaviour
     public float rankUpDelay = 0.5f;
     public float rankUpImmunityDuration = 2f;
 
+
+    [Header("Rank Decay Multipliers")]
+    public float fDecayMultiplier = 1f;
+    public float dDecayMultiplier = 1.25f;
+    public float cDecayMultiplier = 1.5f;
+    public float bDecayMultiplier = 2f;
+    public float aDecayMultiplier = 3f;
+    public float sDecayMultiplier = 4f;
+    public float ssDecayMultiplier = 5f;
+    public float sssDecayMultiplier = 6f;
+
+
     private float rankUpImmunityTimer;
     private bool isRankingUp;
 
@@ -90,14 +102,13 @@ public class ComboManager : MonoBehaviour
         }
 
 
-        // Stop decay during rank immunity
         if (rankUpImmunityTimer <= 0)
         {
-            if (decayTimer >= decayInterval)
+            if (decayTimer >= GetCurrentDecayInterval())
             {
                 decayTimer = 0f;
 
-                ComboReduce(1);
+                ComboReduce(comboData.decayAmount);
             }
         }
     }
@@ -112,6 +123,9 @@ public class ComboManager : MonoBehaviour
     public static void ComboAdd(int amount)
     {
         Instance.currentCombo += amount;
+
+        // Attacking keeps your combo alive
+        Instance.decayTimer = 0f;
 
         Instance.inactivityTimer = 0f;
         Instance.decayInterval = Instance.comboData.defaultDecayInterval;
@@ -131,13 +145,26 @@ public class ComboManager : MonoBehaviour
     }
 
 
+    // Called by enemies when player gets hit
+    public static void TakeDamage(int amount)
+    {
+        Instance.currentCombo = Mathf.Max(
+            0,
+            Instance.currentCombo - amount
+        );
+
+        Instance.decayTimer = 0f;
+
+        Instance.CheckGradeChange();
+    }
+
+
 
     private void CheckGradeChange()
     {
         ComboGrade newGrade = CalculateGrade();
 
 
-        // Rank up
         if (newGrade > displayGrade)
         {
             pendingGrade = newGrade;
@@ -159,19 +186,13 @@ public class ComboManager : MonoBehaviour
         isRankingUp = true;
 
 
-        // Your UI can animate the bar to full here
-        // while waiting
-
         yield return new WaitForSeconds(rankUpDelay);
 
 
-
-        // Apply new rank
         displayGrade = pendingGrade;
         comboGrade = pendingGrade;
 
 
-        // Give immunity
         rankUpImmunityTimer = rankUpImmunityDuration;
 
 
@@ -249,41 +270,6 @@ public class ComboManager : MonoBehaviour
 
 
 
-    public int GetComboNeededForNextGrade()
-    {
-        switch (GetNextGrade(displayGrade))
-        {
-            case ComboGrade.F:
-                return Mathf.Max(0, comboData.fGrade - currentCombo);
-
-            case ComboGrade.D:
-                return Mathf.Max(0, comboData.dGrade - currentCombo);
-
-            case ComboGrade.C:
-                return Mathf.Max(0, comboData.cGrade - currentCombo);
-
-            case ComboGrade.B:
-                return Mathf.Max(0, comboData.bGrade - currentCombo);
-
-            case ComboGrade.A:
-                return Mathf.Max(0, comboData.aGrade - currentCombo);
-
-            case ComboGrade.S:
-                return Mathf.Max(0, comboData.sGrade - currentCombo);
-
-            case ComboGrade.SS:
-                return Mathf.Max(0, comboData.ssGrade - currentCombo);
-
-            case ComboGrade.SSS:
-                return Mathf.Max(0, comboData.sssGrade - currentCombo);
-
-            default:
-                return 0;
-        }
-    }
-
-
-
     public int GetGradeRequirement(ComboGrade grade)
     {
         switch (grade)
@@ -311,10 +297,9 @@ public class ComboManager : MonoBehaviour
 
             case ComboGrade.SSS:
                 return comboData.sssGrade;
-
-            default:
-                return 0;
         }
+
+        return 0;
     }
 
 
@@ -323,6 +308,56 @@ public class ComboManager : MonoBehaviour
 
 
     #region Decay Helpers
+
+
+    private float GetCurrentDecayInterval()
+    {
+        float multiplier = 1f;
+
+
+        switch (displayGrade)
+        {
+            case ComboGrade.F:
+                multiplier = fDecayMultiplier;
+                break;
+
+            case ComboGrade.D:
+                multiplier = dDecayMultiplier;
+                break;
+
+            case ComboGrade.C:
+                multiplier = cDecayMultiplier;
+                break;
+
+            case ComboGrade.B:
+                multiplier = bDecayMultiplier;
+                break;
+
+            case ComboGrade.A:
+                multiplier = aDecayMultiplier;
+                break;
+
+            case ComboGrade.S:
+                multiplier = sDecayMultiplier;
+                break;
+
+            case ComboGrade.SS:
+                multiplier = ssDecayMultiplier;
+                break;
+
+            case ComboGrade.SSS:
+                multiplier = sssDecayMultiplier;
+                break;
+        }
+
+
+        return Mathf.Max(
+            comboData.minimumDecayInterval,
+            decayInterval / multiplier
+        );
+    }
+
+
 
     public void SetRate(float amount)
     {

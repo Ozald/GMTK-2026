@@ -60,7 +60,7 @@ public class AnimatedButton : MonoBehaviour, IPointerEnterHandler, IPointerExitH
             highlightRect.position = Vector3.Lerp(
                 highlightRect.position,
                 targetPosition,
-                Time.deltaTime * slideSpeed
+                Time.unscaledDeltaTime * slideSpeed
             );
         }
     }

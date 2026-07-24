@@ -185,7 +185,7 @@ MonoBehaviour:
   waitingDistance: 3
   attackDistance: 1
   health: 5
-  damage: 1
+  damage: 150
   attackAnimationLength: 0.3
   attackCooldown: 0.75
   attackWindUp: 0.5
