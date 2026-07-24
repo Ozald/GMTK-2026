@@ -1,0 +1,64 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4208372698788155046
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 568238154177418144}
+  - component: {fileID: 3229240065119889144}
+  m_Layer: 0
+  m_Name: SpawnManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &568238154177418144
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4208372698788155046}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.2879953, y: -1.9614617, z: -0.016779406}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3229240065119889144
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4208372698788155046}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 46dd53fb1592b664eb1d64320940852f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rangedCount: 0
+  tankCount: 0
+  maxEnemies: 20
+  minimumEnemies: 3
+  startingSpawnInterval: 5
+  minimumSpawnInterval: 0.5
+  spawnAcceleration: 0.05
+  gruntPrefab: {fileID: 5326451853265047061, guid: 51065d9d0a6e06a4db5fcb762b24096e, type: 3}
+  rangedPrefab: {fileID: 5326451853265047061, guid: 0dd939ee26337ea46846c4eddc353377, type: 3}
+  tankPrefab: {fileID: 5326451853265047061, guid: d092a613bee08414cb0f5e9f3ce80ae9, type: 3}
+  leftSpawnX: -10
+  rightSpawnX: 10
+  lanes:
+  - -0.75
+  - -1.5
+  - -2.25
+  - -3
+  - -3.75
