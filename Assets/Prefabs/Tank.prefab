@@ -189,3 +189,4 @@ MonoBehaviour:
   attackCooldown: 1.5
   attackWindUp: 1
   enemyState: 0
+  enemyType: 2

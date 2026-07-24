@@ -10,6 +10,8 @@ public class EnemyController : MonoBehaviour
     #region variables
 
     public static List<EnemyController> allEnemies = new List<EnemyController>();
+    public static List<EnemyController> allMeleeEnemies = new List<EnemyController>();
+
     protected EnemyManager enemyManager;
 
     public Coroutine waitCoroutine;
@@ -67,6 +69,7 @@ public class EnemyController : MonoBehaviour
     {
         Melee,
         Ranged,
+        Tank
     }
 
     public EnemyType enemyType;
@@ -75,17 +78,19 @@ public class EnemyController : MonoBehaviour
     #region General functions
     void OnEnable()
     {
-        if (enemyType == EnemyType.Melee)
+        allEnemies.Add(this);
+        if (enemyType == EnemyType.Melee || enemyType == EnemyType.Tank)
         {
-            allEnemies.Add(this);
+            allMeleeEnemies.Add(this);
         }
     }
-
     void OnDisable()
     {
-        if (enemyType == EnemyType.Melee)
+        allEnemies.Remove(this);
+
+        if (enemyType == EnemyType.Melee || enemyType == EnemyType.Tank)
         {
-            allEnemies.Remove(this);
+            allMeleeEnemies.Remove(this);
         }
     }
 
@@ -111,6 +116,8 @@ public class EnemyController : MonoBehaviour
 
     void Update()
     {
+        FacePlayer();
+
         switch (enemyState)
         {
             case EnemyStates.Walk:
@@ -207,7 +214,7 @@ public class EnemyController : MonoBehaviour
 
     public void AttackState()
     {
-        if (enemyType == EnemyType.Melee)
+        if (enemyType == EnemyType.Melee || enemyType == EnemyType.Tank)
         {
             if (!enemyManager.CanEnemyAttack(this))
             {
@@ -230,7 +237,7 @@ public class EnemyController : MonoBehaviour
 
     public void ReadyToAttackState()
     {
-        if (enemyType == EnemyType.Melee)
+        if (enemyType == EnemyType.Melee || enemyType == EnemyType.Tank)
         {
             if (!enemyManager.IsOtherEnemyAttacking(this))
             {
@@ -340,7 +347,7 @@ public class EnemyController : MonoBehaviour
     {
         Vector3 force = Vector3.zero;
 
-        foreach(EnemyController enemy in allEnemies){
+        foreach(EnemyController enemy in allMeleeEnemies){
             if (enemy == this)
             {
                 continue;
@@ -360,5 +367,23 @@ public class EnemyController : MonoBehaviour
         }
 
         return force * seperationStrength;
+    }
+    protected void FacePlayer()
+    {
+        if (playerTransform == null)
+            return;
+
+        float direction = playerTransform.position.x - transform.position.x;
+
+        if (direction > 0)
+        {
+            // Player is to the right
+            transform.rotation = Quaternion.Euler(0, 0, 0);
+        }
+        else if (direction < 0)
+        {
+            // Player is to the left
+            transform.rotation = Quaternion.Euler(0, 180, 0);
+        }
     }
 }

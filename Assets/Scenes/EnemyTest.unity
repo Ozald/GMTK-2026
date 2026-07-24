@@ -655,12 +655,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46dd53fb1592b664eb1d64320940852f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyPrefab: {fileID: 5326451853265047061, guid: 51065d9d0a6e06a4db5fcb762b24096e, type: 3}
   maxEnemies: 20
   minimumEnemies: 3
   startingSpawnInterval: 5
   minimumSpawnInterval: 0.5
   spawnAcceleration: 0.05
+  gruntPrefab: {fileID: 5326451853265047061, guid: 51065d9d0a6e06a4db5fcb762b24096e, type: 3}
+  rangedPrefab: {fileID: 5326451853265047061, guid: 0dd939ee26337ea46846c4eddc353377, type: 3}
+  tankPrefab: {fileID: 5326451853265047061, guid: d092a613bee08414cb0f5e9f3ce80ae9, type: 3}
   leftSpawnX: -10
   rightSpawnX: 10
   lanes:

@@ -60,7 +60,11 @@ public class RangedEnemyController : EnemyController
 
     void Shoot()
     {
-        GameObject projectile = Instantiate( projectilePrefab,firePoint.position,transform.rotation);
+        GameObject projectile = Instantiate(
+            projectilePrefab,
+            firePoint.position,
+            transform.rotation
+        );
 
         Projectile projectileScript = projectile.GetComponent<Projectile>();
 

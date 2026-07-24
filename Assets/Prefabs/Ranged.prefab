@@ -61,7 +61,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -2.74, z: 0}
-  m_LocalScale: {x: 1.2, y: 1.2, z: 1.2}
+  m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 8465111757565929941}
@@ -224,5 +224,5 @@ MonoBehaviour:
   enemyType: 1
   minShootingDistance: 4
   maxShootingDistance: 7
-  projectilePrefab: {fileID: 2807707975945813484}
+  projectilePrefab: {fileID: 9166291203354148704, guid: 206b21d409a56b443a5d472554bb0541, type: 3}
   firePoint: {fileID: 8465111757565929941}
