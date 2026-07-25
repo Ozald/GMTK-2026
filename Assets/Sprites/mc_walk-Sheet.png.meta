@@ -142,7 +142,7 @@ TextureImporter:
       name: mc_walk-Sheet_2
       rect:
         serializedVersion: 2
-        x: 256
+        x: 269
         y: 0
         width: 128
         height: 128
@@ -163,7 +163,7 @@ TextureImporter:
       name: mc_walk-Sheet_3
       rect:
         serializedVersion: 2
-        x: 384
+        x: 408
         y: 0
         width: 128
         height: 128
