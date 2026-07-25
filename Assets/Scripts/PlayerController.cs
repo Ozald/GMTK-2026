@@ -189,4 +189,17 @@ public class PlayerController : MonoBehaviour
 
         overrideController.ApplyOverrides(overrides);
     }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if ((playerSettings.enemyAttackLayer.value & (1 << collision.gameObject.layer)) != 0)
+        {
+            if (transform.position.y > collision.transform.position.y + 0.5f || transform.position.y < collision.transform.position.y - 0.5f)
+                return;
+
+            Debug.Log("Player hit by enemy attack!");
+            ComboManager.TakeDamage(200);
+        }
+        
+    }
 }

@@ -12,6 +12,8 @@ public class PlayerSettings : ScriptableObject
     public float dashForce = 5f;
     public float dashDuration = 0.5f;
 
+    public LayerMask enemyAttackLayer;
+
     [Header("Attacks")]
     [InspectorName("Z Key")] public AttackData punchAttack;
 
