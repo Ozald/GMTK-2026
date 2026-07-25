@@ -6,6 +6,8 @@ public class AttackHitbox : MonoBehaviour
     public int damage;
     public int comboGain;
 
+
+
     private HashSet<EnemyController> hitEnemies = new HashSet<EnemyController>();
 
     private void OnEnable()
@@ -25,7 +27,13 @@ public class AttackHitbox : MonoBehaviour
 
         hitEnemies.Add(enemy);
 
-        if (enemy.TakeDamage(damage))
+        CombatFeed.Instance.AddHit();
+
+        float multiplier = Mathf.Min(1f + (CombatFeed.Instance.GetHitChain() - 1) * 0.1f,3f); // Max 3x damage
+
+        int finalDamage = Mathf.RoundToInt(damage * multiplier);
+
+        if (enemy.TakeDamage(finalDamage))
         {
             ComboManager.ComboAdd(comboGain);
         }
