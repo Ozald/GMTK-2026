@@ -17,10 +17,20 @@ public class EnemyController : MonoBehaviour
     public Coroutine waitCoroutine;
     public Coroutine attackCoroutine;
     public Coroutine prepareCoroutine;
+    private Coroutine hitFlashCoroutine;
+    private Coroutine interruptFlashCoroutine;
     public Rigidbody2D rb;
+
+    private bool isKnockedBack = false;
 
     private SpriteRenderer spriteRenderer;
     private Color originalColor;
+
+    public float hitStunDuration = 0.2f;
+    public float interruptKnockbackForce = 1.5f;
+
+    private Coroutine hitCoroutine;
+    private EnemyStates previousState;
 
     public float speed = 3.0f;
     public float stoppingDistance = 1.0f;
@@ -32,8 +42,13 @@ public class EnemyController : MonoBehaviour
     public float roamMoveSpeed = 0.5f;
     private Vector3 roamOffset;
 
+    public int maxHitsBeforeAttack = 3;
+    private int hitCount = 0;
+    private bool canBeInterrupted = true;
+
     float roamSide;
     float roamDistance;
+
 
     private Vector3 roamTarget;
     private Vector3 homePosition;
@@ -138,8 +153,28 @@ public class EnemyController : MonoBehaviour
             case EnemyStates.Attack:
                 AttackState();
                 break;
+            case EnemyStates.Hit:
+                HitState();
+                break;
         }
     }
+
+    //private void OnTriggerEnter2D(Collider2D collision)
+    //{
+    //    if (collision.CompareTag("PlayerHitbox"))
+    //    {
+    //        AttackHitbox hitbox = collision.GetComponent<AttackHitbox>();
+
+    //        if (hitbox == null)
+    //            return;
+
+    //        if (TakeDamage(hitbox.damage))
+    //        {
+
+    //            ComboManager.ComboAdd(hitbox.comboGain);
+    //        }
+    //    }
+    //}
 
     #endregion
 
@@ -147,6 +182,9 @@ public class EnemyController : MonoBehaviour
 
     protected virtual void WalkState()
     {
+        if (isKnockedBack)
+            return;
+
         bool canAttack = enemyManager.CanEnemyAttack(this);
 
         float side = Mathf.Sign(transform.position.x - playerTransform.position.x);
@@ -214,18 +252,22 @@ public class EnemyController : MonoBehaviour
 
     public void AttackState()
     {
-        if (enemyType == EnemyType.Melee || enemyType == EnemyType.Tank)
+        // Ignore enemy manager restrictions when enraged after max hits
+        if (canBeInterrupted)
         {
-            if (!enemyManager.CanEnemyAttack(this))
+            if (enemyType == EnemyType.Melee || enemyType == EnemyType.Tank)
             {
-                enemyState = EnemyStates.Walk;
-                return;
-            }
+                if (!enemyManager.CanEnemyAttack(this))
+                {
+                    enemyState = EnemyStates.Walk;
+                    return;
+                }
 
-            if (enemyManager.IsOtherEnemyAttacking(this))
-            {
-                enemyState = EnemyStates.ReadyToAttack;
-                return;
+                if (enemyManager.IsOtherEnemyAttacking(this))
+                {
+                    enemyState = EnemyStates.ReadyToAttack;
+                    return;
+                }
             }
         }
 
@@ -260,6 +302,8 @@ public class EnemyController : MonoBehaviour
 
     void RoamState()
     {
+        if (isKnockedBack)
+            return;
         // Keep the roaming position attached to the player
         homePosition = playerTransform.position +
                        Vector3.right * roamSide * roamDistance;
@@ -295,21 +339,29 @@ public class EnemyController : MonoBehaviour
             waitCoroutine = StartCoroutine(WaitingCoroutine());
         }
     }
+
+    private void HitState()
+    {
+        if (hitCoroutine == null)
+        {
+            hitCoroutine = StartCoroutine(HitCoroutine());
+        }
+    }
     #endregion
 
     #region Coroutines
     protected virtual IEnumerator AttackCoroutine()
     {
-        //RuntimeManager.PlayOneShot(onPunchEvent, transform.position);
         yield return new WaitForSeconds(attackAnimationLength);
 
-        // TODO: Implement the attack logic here (e.g., play attack animation, detect enemies, etc.)
+        hitCount = 0;
+        canBeInterrupted = true;
 
         enemyState = EnemyStates.Waiting;
         attackCoroutine = null;
     }
 
-    
+
 
     public IEnumerator WaitingCoroutine()
     {
@@ -336,11 +388,157 @@ public class EnemyController : MonoBehaviour
         enemyState = EnemyStates.Attack;
         prepareCoroutine = null;
     }
+
+    private IEnumerator HitCoroutine()
+    {
+        // Stop attack
+        if (attackCoroutine != null)
+        {
+            StopCoroutine(attackCoroutine);
+            attackCoroutine = null;
+        }
+
+        if (prepareCoroutine != null)
+        {
+            StopCoroutine(prepareCoroutine);
+            prepareCoroutine = null;
+        }
+
+
+        isKnockedBack = true;
+
+
+        if (rb != null && playerTransform != null)
+        {
+            Vector2 direction =
+                (transform.position - playerTransform.position).normalized;
+
+            rb.AddForce(direction * interruptKnockbackForce, ForceMode2D.Impulse);
+        }
+
+
+        yield return new WaitForSeconds(hitStunDuration);
+
+
+        if (rb != null)
+        {
+            rb.velocity = Vector2.zero;
+        }
+
+
+        isKnockedBack = false;
+
+
+        if (enemyState != EnemyStates.Dead)
+        {
+            enemyState = previousState;
+        }
+
+
+        hitCoroutine = null;
+    }
     #endregion
 
-    void TakeDamage(int amount)
+    public bool TakeDamage(int amount)
     {
+        if (enemyState == EnemyStates.Dead)
+            return false;
+
         health -= amount;
+
+        hitCount++;
+
+        bool rageHit = hitCount >= maxHitsBeforeAttack;
+
+
+        // Only do normal hit flash if it is NOT the rage hit
+        if (!rageHit)
+        {
+            if (hitFlashCoroutine != null)
+                StopCoroutine(hitFlashCoroutine);
+
+            hitFlashCoroutine = StartCoroutine(HitFlash());
+        }
+
+
+        // Stagger system
+        if (!rageHit && canBeInterrupted)
+        {
+            previousState = enemyState;
+            enemyState = EnemyStates.Hit;
+        }
+        else if (rageHit)
+        {
+            canBeInterrupted = false;
+
+            // Start attack preparation instead of hit state
+            enemyState = EnemyStates.PreparingAttack;
+        }
+
+
+        if (health <= 0)
+            Die();
+
+        return true;
+    }
+
+
+    private IEnumerator HitFlash()
+    {
+        if (spriteRenderer == null)
+            yield break;
+
+        spriteRenderer.color = Color.black;
+
+        yield return new WaitForSeconds(0.3f);
+
+        if (enemyState != EnemyStates.Dead)
+            spriteRenderer.color = originalColor;
+
+        hitFlashCoroutine = null;
+    }
+
+    private IEnumerator InterruptFlash()
+    {
+        if (spriteRenderer == null)
+            yield break;
+
+        spriteRenderer.color = Color.red;
+
+        yield return new WaitForSeconds(0.2f);
+
+        if (enemyState != EnemyStates.Dead)
+            spriteRenderer.color = originalColor;
+
+        interruptFlashCoroutine = null;
+    }
+
+    private void Die()
+    {
+        enemyState = EnemyStates.Dead;
+
+        StopAllCoroutines();
+
+        if (rb != null)
+        {
+            rb.velocity = Vector2.zero;
+            rb.simulated = false;
+        }
+
+        Collider2D col = GetComponent<Collider2D>();
+        if (col != null)
+            col.enabled = false;
+
+        // TODO:
+        // Play death animation
+        // Spawn particles
+        // Play sound
+        // Drop loot
+
+        hitCount = 0;
+        canBeInterrupted = false;
+
+        Destroy(gameObject);
     }
 
     Vector3 GetSeperationForce()

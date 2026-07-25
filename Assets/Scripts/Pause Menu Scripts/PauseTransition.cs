@@ -6,8 +6,9 @@ public class PauseTransition : MonoBehaviour
     public RectTransform panel;
 
     public ButtonTransition[] buttons;
+    public AnimatedButton[] animatedButtons;
 
-    public bool isPauseOpen = false;
+    public static bool isPauseOpen = false;
 
     public float offScreenDistance = 2000f;
     public float overshootAmount = 500f;
@@ -98,6 +99,11 @@ public class PauseTransition : MonoBehaviour
         foreach (ButtonTransition button in buttons)
         {
             button.Exit();
+        }
+
+        foreach (AnimatedButton button in animatedButtons)
+        {
+            button.ResetHighlight();
         }
     }
 }

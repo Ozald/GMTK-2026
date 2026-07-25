@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1636009282792233543
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 493625018512632945}
+  m_Layer: 0
+  m_Name: Feet
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &493625018512632945
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1636009282792233543}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.87, z: 0}
+  m_LocalScale: {x: 1.25, y: 1.25, z: 1.25}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2320883782744585159}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2807707975945813484
 GameObject:
   m_ObjectHideFlags: 0
@@ -44,6 +75,7 @@ GameObject:
   - component: {fileID: 3222701078647484757}
   - component: {fileID: 1400675159501435093}
   - component: {fileID: 8256551479825266091}
+  - component: {fileID: 5785951723101498770}
   m_Layer: 0
   m_Name: Ranged
   m_TagString: Untagged
@@ -64,6 +96,7 @@ Transform:
   m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
   m_ConstrainProportionsScale: 1
   m_Children:
+  - {fileID: 493625018512632945}
   - {fileID: 8465111757565929941}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -178,7 +211,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -0.80382013}
+  m_Offset: {x: 0, y: 0.24569812}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -189,7 +222,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 0.39235973}
+  m_Size: {x: 1.1237178, y: 1.5842202}
   m_EdgeRadius: 0
 --- !u!114 &8256551479825266091
 MonoBehaviour:
@@ -204,6 +237,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rb: {fileID: 0}
+  hitStunDuration: 0.2
+  interruptKnockbackForce: 1.5
   speed: 3
   stoppingDistance: 1
   sideOffset: 1.2
@@ -211,11 +246,12 @@ MonoBehaviour:
   roamAmount: 0.15
   roamSpeed: 0.5
   roamMoveSpeed: 0.5
+  maxHitsBeforeAttack: 3
   seperationDistance: 1
   seperationStrength: 2
   waitingDistance: 4
   attackDistance: 1.2
-  health: 5
+  health: 3
   damage: 300
   attackAnimationLength: 0.3
   attackCooldown: 0.5
@@ -226,3 +262,18 @@ MonoBehaviour:
   maxShootingDistance: 7
   projectilePrefab: {fileID: 9166291203354148704, guid: 206b21d409a56b443a5d472554bb0541, type: 3}
   firePoint: {fileID: 8465111757565929941}
+--- !u!114 &5785951723101498770
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5326451853265047061}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a07dd302aab6214428e31eb302963ce1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  feet: {fileID: 493625018512632945}
+  offset: 0
+  precision: 100

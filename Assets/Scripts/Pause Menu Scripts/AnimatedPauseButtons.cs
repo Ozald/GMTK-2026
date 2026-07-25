@@ -24,10 +24,17 @@ public class AnimatedButton : MonoBehaviour, IPointerEnterHandler, IPointerExitH
 
     public void OnPointerEnter(PointerEventData eventData)
     {
+        if (!PauseTransition.isPauseOpen)
+            return;
         MoveHighlight();
     }
 
     public void OnPointerExit(PointerEventData eventData)
+    {
+        targetPosition = startPosition;
+    }
+
+    public void ResetHighlight()
     {
         targetPosition = startPosition;
     }

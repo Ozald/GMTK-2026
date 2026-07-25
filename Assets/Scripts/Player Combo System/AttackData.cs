@@ -31,9 +31,7 @@ public class AttackData : ScriptableObject
 
     public void Attack(PlayerController player)
     {
-        player.transform.localScale = new Vector3(Input.GetAxisRaw("Horizontal") > 0 ? 1 : -1, 1, 1);
-
-        player.rb.AddForce((player.transform.right * player.transform.localScale.x).normalized * 5f, ForceMode2D.Impulse);
+        player.rb.AddForce(player.transform.right * player.transform.localScale.x * 5f, ForceMode2D.Impulse);
 
         ComboManager.ComboAdd(1);
     }
