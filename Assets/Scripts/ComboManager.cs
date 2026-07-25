@@ -16,6 +16,9 @@ public class ComboManager : MonoBehaviour
     public ComboGrade comboGrade;
     public ComboGrade displayGrade;
 
+    [SerializeField] private float multiplierIncrease = 0.1f;
+    [SerializeField] private float maxMultiplier = 3f;
+
 
     public enum ComboGrade
     {
@@ -144,8 +147,6 @@ public class ComboManager : MonoBehaviour
         Instance.CheckGradeChange();
     }
 
-
-    // Called by enemies when player gets hit
     public static void TakeDamage(int amount)
     {
         Instance.currentCombo = Mathf.Max(
@@ -154,6 +155,12 @@ public class ComboManager : MonoBehaviour
         );
 
         Instance.decayTimer = 0f;
+
+        // Player got hit, reset hit chain
+        if (CombatFeed.Instance != null)
+        {
+            CombatFeed.Instance.ResetHitChain();
+        }
 
         Instance.CheckGradeChange();
     }
@@ -379,6 +386,13 @@ public class ComboManager : MonoBehaviour
             comboData.minimumDecayInterval,
             decayInterval
         );
+    }
+
+    public static float GetDamageMultiplier()
+    {
+        float multiplier = 1f + (Instance.currentCombo * Instance.multiplierIncrease);
+
+        return Mathf.Min(multiplier, Instance.maxMultiplier);
     }
 
     #endregion

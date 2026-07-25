@@ -6,14 +6,24 @@ public class AttackHitbox : MonoBehaviour
     public int damage;
     public int comboGain;
 
-
+    [Header("Multi Hit")]
+    public float multiHitIncrease = 0.25f;
+    public float maxMultiHitMultiplier = 3f;
 
     private HashSet<EnemyController> hitEnemies = new HashSet<EnemyController>();
+
 
     private void OnEnable()
     {
         hitEnemies.Clear();
     }
+
+
+    private void OnDisable()
+    {
+        CheckMultiHit();
+    }
+
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -29,13 +39,46 @@ public class AttackHitbox : MonoBehaviour
 
         CombatFeed.Instance.AddHit();
 
-        float multiplier = Mathf.Min(1f + (CombatFeed.Instance.GetHitChain() - 1) * 0.1f,3f); // Max 3x damage
-
-        int finalDamage = Mathf.RoundToInt(damage * multiplier);
+        int finalDamage = damage;
 
         if (enemy.TakeDamage(finalDamage))
         {
-            ComboManager.ComboAdd(comboGain);
+            float hitMultiplier = ComboManager.GetDamageMultiplier();
+            float multiHitMultiplier = GetMultiHitMultiplier();
+
+            int finalComboGain = Mathf.RoundToInt(
+                comboGain * hitMultiplier * multiHitMultiplier
+            );
+
+            ComboManager.ComboAdd(finalComboGain);
+        }
+    }
+
+
+    private float GetMultiHitMultiplier()
+    {
+        int targets = hitEnemies.Count;
+
+        if (targets <= 1)
+            return 1f;
+
+
+        float multiplier = 1f + ((targets - 1) * multiHitIncrease);
+
+        return Mathf.Min(
+            multiplier,
+            maxMultiHitMultiplier
+        );
+    }
+
+
+    private void CheckMultiHit()
+    {
+        if (hitEnemies.Count > 1)
+        {
+            CombatFeed.Instance.Add(
+                $"MultiHit (x{hitEnemies.Count})"
+            );
         }
     }
 }

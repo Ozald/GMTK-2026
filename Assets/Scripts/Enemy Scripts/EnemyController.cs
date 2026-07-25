@@ -13,9 +13,9 @@ public class EnemyController : MonoBehaviour
     public static List<EnemyController> allMeleeEnemies = new List<EnemyController>();
 
     [Header("Combo Rewards")]
-    public int meleeComboReward = 5;
-    public int rangedComboReward = 7;
-    public int tankComboReward = 10;
+    public int meleeComboReward = 50;
+    public int rangedComboReward = 75;
+    public int tankComboReward = 100;
 
     protected EnemyManager enemyManager;
 
@@ -531,6 +531,8 @@ public class EnemyController : MonoBehaviour
     {
         enemyState = EnemyStates.Dead;
 
+        KillTracker.Instance.EnemyKilled();
+
         StopAllCoroutines();
 
         if (rb != null)
@@ -568,8 +570,20 @@ public class EnemyController : MonoBehaviour
                 comboReward = tankComboReward;
                 break;
         }
+        
+        float killMultiplier = KillTracker.Instance.GetKillMultiplier();
 
-        ComboManager.ComboAdd(comboReward);
+        ComboManager.ComboAdd(Mathf.RoundToInt(comboReward * killMultiplier));
+
+        string enemyName = enemyType switch
+        {
+            EnemyType.Melee => "Grunt",
+            EnemyType.Ranged => "Gunner",
+            EnemyType.Tank => "Tank",
+            _ => "Enemy"
+        };
+
+        CombatFeed.Instance.Add($"{enemyName} Defeated!");
 
         Destroy(gameObject);
     }
