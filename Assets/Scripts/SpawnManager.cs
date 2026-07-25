@@ -94,7 +94,7 @@ public class SpawnManager : MonoBehaviour
             prefabToSpawn = tankPrefab;
         }
 
-        else if (roll < 0.25f && rangedCount < 3)
+        else if (roll < 0.25f && rangedCount < 2)
         {
             prefabToSpawn = rangedPrefab;
         }

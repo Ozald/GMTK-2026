@@ -18,6 +18,7 @@ public class PlayerController : MonoBehaviour
     private float stateTimer;
     private AttackData currentAttack;
     private bool attackQueued;
+    private bool IsWalking;
     private Animator animator;
     private AnimatorOverrideController overrideController;
 
@@ -65,7 +66,12 @@ public class PlayerController : MonoBehaviour
 
         Vector2 movement = new Vector2(moveHorizontal * playerSettings.horizontalSpeed, moveVertical * playerSettings.verticalSpeed);
 
-        if (movement.sqrMagnitude > 0.01)
+
+        bool isMoving = movement.sqrMagnitude > 0.01f;
+
+        animator.SetBool("IsWalking", isMoving);
+
+        if (isMoving)
         {
             rb.velocity = movement;
             
@@ -103,6 +109,8 @@ public class PlayerController : MonoBehaviour
 
     public void AttackState()
     {
+        animator.SetBool("IsWalking", false);
+
         if (attackCoroutine == null)
         {
             attackCoroutine = StartCoroutine(AttackCoroutine());
@@ -116,6 +124,8 @@ public class PlayerController : MonoBehaviour
 
     public void DashState()
     {
+        animator.SetBool("IsWalking", false);
+
         if (stateTimer >= playerSettings.dashDuration)
         {
             ResetState();

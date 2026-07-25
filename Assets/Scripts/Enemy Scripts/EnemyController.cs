@@ -12,6 +12,11 @@ public class EnemyController : MonoBehaviour
     public static List<EnemyController> allEnemies = new List<EnemyController>();
     public static List<EnemyController> allMeleeEnemies = new List<EnemyController>();
 
+    [Header("Combo Rewards")]
+    public int meleeComboReward = 5;
+    public int rangedComboReward = 7;
+    public int tankComboReward = 10;
+
     protected EnemyManager enemyManager;
 
     public Coroutine waitCoroutine;
@@ -36,11 +41,14 @@ public class EnemyController : MonoBehaviour
     public float stoppingDistance = 1.0f;
     public float sideOffset = 1.2f;
     public float laneTolerance = 0.25f;
-    
+
+
+    public float maxRoamDistance = 2f;
     public float roamAmount = 0.15f;
     public float roamSpeed = 0.5f;
     public float roamMoveSpeed = 0.5f;
     private Vector3 roamOffset;
+    private Vector3 roamStartPlayerPosition;
 
     public int maxHitsBeforeAttack = 3;
     private int hitCount = 0;
@@ -238,6 +246,7 @@ public class EnemyController : MonoBehaviour
             {
                 roamSide = side;
                 roamDistance = waitingDistance;
+                roamStartPlayerPosition = playerTransform.position;
 
                 roamOffset = new Vector3(
                     Random.Range(-1f, 1f),
@@ -302,21 +311,27 @@ public class EnemyController : MonoBehaviour
 
     void RoamState()
     {
+
         if (isKnockedBack)
             return;
+
+        // If the player has moved too far away, chase them again.
+        float distanceToHome = Vector3.Distance(transform.position, homePosition);
+
+        if (Vector3.Distance(playerTransform.position, roamStartPlayerPosition) > maxRoamDistance)
+        {
+            enemyState = EnemyStates.Walk;
+            return;
+        }
+
         // Keep the roaming position attached to the player
         homePosition = playerTransform.position +
                        Vector3.right * roamSide * roamDistance;
 
-        // Small vertical movement
         float offset = Mathf.Sin(Time.time * roamSpeed + GetInstanceID()) * roamAmount;
-
         roamTarget = homePosition + new Vector3(0, offset, 0);
 
-        // Get pushed away from nearby enemies
         Vector3 separation = GetSeperationForce();
-
-
         Vector3 finalTarget = roamTarget + separation;
 
         transform.position = Vector3.MoveTowards(
@@ -325,7 +340,6 @@ public class EnemyController : MonoBehaviour
             roamMoveSpeed * Time.deltaTime
         );
 
-        // If this enemy becomes one of the attackers
         if (enemyManager.CanEnemyAttack(this))
         {
             enemyState = EnemyStates.Walk;
@@ -537,6 +551,25 @@ public class EnemyController : MonoBehaviour
 
         hitCount = 0;
         canBeInterrupted = false;
+
+        int comboReward = 0;
+
+        switch (enemyType)
+        {
+            case EnemyType.Melee:
+                comboReward = meleeComboReward;
+                break;
+
+            case EnemyType.Ranged:
+                comboReward = rangedComboReward;
+                break;
+
+            case EnemyType.Tank:
+                comboReward = tankComboReward;
+                break;
+        }
+
+        ComboManager.ComboAdd(comboReward);
 
         Destroy(gameObject);
     }

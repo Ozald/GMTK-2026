@@ -212,6 +212,7 @@ MonoBehaviour:
   stoppingDistance: 0.05
   sideOffset: 1.5
   laneTolerance: 0.25
+  maxRoamDistance: 4
   roamAmount: 0.3
   roamSpeed: 0.5
   roamMoveSpeed: 0.5
