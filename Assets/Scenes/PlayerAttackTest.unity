@@ -370,6 +370,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   multiKillWindow: 0.5
+  doubleKillMultiplier: 1.25
+  tripleKillMultiplier: 1.5
+  massacreMultiplier: 2
+  maxKillMultiplier: 3
 --- !u!4 &158283744
 Transform:
   m_ObjectHideFlags: 0
@@ -714,7 +718,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: 4.1319213}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -725,7 +729,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 1, y: 9.263843}
   m_EdgeRadius: 0
 --- !u!212 &414110700
 SpriteRenderer:
@@ -2056,6 +2060,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 1
   comboGain: 25
+  multiHitIncrease: 0.25
+  maxMultiHitMultiplier: 3
 --- !u!1 &1408622617
 GameObject:
   m_ObjectHideFlags: 0
@@ -2409,7 +2415,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.3333334, y: 2.6666667}
+    oldSize: {x: 0.9375, y: 2}
     newSize: {x: 1, y: 2}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -3091,6 +3097,18 @@ PrefabInstance:
     - target: {fileID: 6090408343147838693, guid: 0e3379bd7cde32b4a88e7b83bd4581cf, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -553.76
+      objectReference: {fileID: 0}
+    - target: {fileID: 6181429022003155799, guid: 0e3379bd7cde32b4a88e7b83bd4581cf, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6181429022003155799, guid: 0e3379bd7cde32b4a88e7b83bd4581cf, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6181429022003155799, guid: 0e3379bd7cde32b4a88e7b83bd4581cf, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
