@@ -16,6 +16,9 @@ MonoBehaviour:
   horizontalSpeed: 5
   dashForce: 15
   dashDuration: 0.3
+  enemyAttackLayer:
+    serializedVersion: 2
+    m_Bits: 8
   punchAttack: {fileID: 11400000, guid: ce54134a990086945bd39d0d4a6f2ed7, type: 2}
   dashSound:
     Guid:

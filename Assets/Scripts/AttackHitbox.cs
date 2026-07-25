@@ -35,6 +35,9 @@ public class AttackHitbox : MonoBehaviour
         if (hitEnemies.Contains(enemy))
             return;
 
+        if (transform.position.y > collision.transform.position.y + 0.5f || transform.position.y < collision.transform.position.y - 0.5f)
+            return;
+
         hitEnemies.Add(enemy);
 
         CombatFeed.Instance.AddHit();

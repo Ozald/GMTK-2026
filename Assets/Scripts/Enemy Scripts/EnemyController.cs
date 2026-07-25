@@ -76,6 +76,10 @@ public class EnemyController : MonoBehaviour
     public EnemyStates enemyState;
 
     protected Transform playerTransform;
+
+    private Animator animator;
+    private AnimatorOverrideController overrideController;
+
     public enum EnemyStates
     {
         Walk,
@@ -135,6 +139,11 @@ public class EnemyController : MonoBehaviour
         }
         enemyManager = FindObjectOfType<EnemyManager>();
         enemyState = EnemyStates.Walk;
+
+        animator = GetComponent<Animator>();
+
+        overrideController = new AnimatorOverrideController(animator.runtimeAnimatorController);
+        animator.runtimeAnimatorController = overrideController;
     }
 
     void Update()
@@ -240,6 +249,7 @@ public class EnemyController : MonoBehaviour
 
             if (canAttack)
             {
+                animator.SetBool("IsWalking", false);
                 enemyState = EnemyStates.ReadyToAttack;
             }
             else
@@ -254,6 +264,7 @@ public class EnemyController : MonoBehaviour
                     0
                 );
 
+                animator.SetBool("IsWalking", true);
                 enemyState = EnemyStates.Roaming;
             }
         }
@@ -268,12 +279,14 @@ public class EnemyController : MonoBehaviour
             {
                 if (!enemyManager.CanEnemyAttack(this))
                 {
+                    animator.SetBool("IsWalking", true);
                     enemyState = EnemyStates.Walk;
                     return;
                 }
 
                 if (enemyManager.IsOtherEnemyAttacking(this))
                 {
+                    animator.SetBool("IsWalking", false);
                     enemyState = EnemyStates.ReadyToAttack;
                     return;
                 }
@@ -292,11 +305,13 @@ public class EnemyController : MonoBehaviour
         {
             if (!enemyManager.IsOtherEnemyAttacking(this))
             {
+                animator.SetBool("IsWalking", false);
                 enemyState = EnemyStates.PreparingAttack;
             }
         }
         else if (enemyType == EnemyType.Ranged)
         {
+            animator.SetBool("IsWalking", false);
             enemyState = EnemyStates.PreparingAttack;
         }
     }
@@ -320,6 +335,7 @@ public class EnemyController : MonoBehaviour
 
         if (Vector3.Distance(playerTransform.position, roamStartPlayerPosition) > maxRoamDistance)
         {
+            animator.SetBool("IsWalking", true);
             enemyState = EnemyStates.Walk;
             return;
         }
@@ -342,6 +358,7 @@ public class EnemyController : MonoBehaviour
 
         if (enemyManager.CanEnemyAttack(this))
         {
+            animator.SetBool("IsWalking", true);
             enemyState = EnemyStates.Walk;
         }
     }
@@ -366,11 +383,14 @@ public class EnemyController : MonoBehaviour
     #region Coroutines
     protected virtual IEnumerator AttackCoroutine()
     {
+        animator.Play("AttackState", -1, 0f);
+
         yield return new WaitForSeconds(attackAnimationLength);
 
         hitCount = 0;
         canBeInterrupted = true;
 
+        animator.SetBool("IsWalking", false);
         enemyState = EnemyStates.Waiting;
         attackCoroutine = null;
     }
@@ -381,6 +401,7 @@ public class EnemyController : MonoBehaviour
     {
         yield return new WaitForSeconds(attackCooldown);
 
+        animator.SetBool("IsWalking", true);
         enemyState = EnemyStates.Walk;
         waitCoroutine = null;
     }
@@ -399,6 +420,7 @@ public class EnemyController : MonoBehaviour
             spriteRenderer.color = originalColor;
         }
 
+        animator.SetBool("IsWalking", false);
         enemyState = EnemyStates.Attack;
         prepareCoroutine = null;
     }
@@ -458,6 +480,7 @@ public class EnemyController : MonoBehaviour
         if (enemyState == EnemyStates.Dead)
             return false;
 
+
         health -= amount;
 
         hitCount++;
@@ -479,6 +502,7 @@ public class EnemyController : MonoBehaviour
         if (!rageHit && canBeInterrupted)
         {
             previousState = enemyState;
+            animator.SetBool("IsWalking", false);
             enemyState = EnemyStates.Hit;
         }
         else if (rageHit)
@@ -486,6 +510,7 @@ public class EnemyController : MonoBehaviour
             canBeInterrupted = false;
 
             // Start attack preparation instead of hit state
+            animator.SetBool("IsWalking", false);
             enemyState = EnemyStates.PreparingAttack;
         }
 
