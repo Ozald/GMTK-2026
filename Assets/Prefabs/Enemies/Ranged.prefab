@@ -95,7 +95,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -2.74, z: 0}
-  m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 493625018512632945}
@@ -247,6 +247,7 @@ MonoBehaviour:
   rangedComboReward: 75
   tankComboReward: 100
   rb: {fileID: 0}
+  isKnockedBack: 0
   hitStunDuration: 0.2
   interruptKnockbackForce: 1.5
   speed: 3
@@ -258,6 +259,8 @@ MonoBehaviour:
   roamSpeed: 0.5
   roamMoveSpeed: 0.5
   maxHitsBeforeAttack: 3
+  hitCount: 0
+  canBeInterrupted: 1
   seperationDistance: 1
   seperationStrength: 2
   waitingDistance: 4
@@ -323,6 +326,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shadowPrefab: {fileID: 5036237338572807392, guid: 10142c0feb89cb94dbd906f23ab7e3d1, type: 3}
-  offset: {x: 0, y: -0.7, z: 0}
+  offset: {x: 0, y: -1, z: 0}
   scale: {x: 1, y: 1, z: 1}
   currentShadow: {fileID: 0}
