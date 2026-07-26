@@ -8,7 +8,8 @@ public enum PlayerStates
     Walk,
     Attack,
     Dash,
-    Parry
+    Parry,
+    Hit
 }
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -44,21 +45,32 @@ public class PlayerController : MonoBehaviour
     {
         stateTimer += Time.deltaTime;
 
-        switch (playerState)
+        if (ComboManager.Instance.currentCombo > 0)
         {
-            case PlayerStates.Walk:
-                WalkState();
-                break;
-            case PlayerStates.Attack:
-                AttackState();
-                break;
-            case PlayerStates.Dash:
-                DashState();
-                break;
-            case PlayerStates.Parry:
-                ParryState();
-                break;
+            switch (playerState)
+            {
+                case PlayerStates.Walk:
+                    WalkState();
+                    break;
+                case PlayerStates.Attack:
+                    AttackState();
+                    break;
+                case PlayerStates.Dash:
+                    DashState();
+                    break;
+                case PlayerStates.Parry:
+                    ParryState();
+                    break;
+                case PlayerStates.Hit:
+                    HitState();
+                    break;
+            }
         }
+        else
+        {
+            animator.Play("PlayerDeath", -1, 0f);
+        }
+        
     }
 
     /********************************************************************************************/
@@ -101,6 +113,7 @@ public class PlayerController : MonoBehaviour
         {
             ResetState();
             rb.velocity = Vector2.zero;
+            animator.SetTrigger("ParryStart");
             playerState = PlayerStates.Parry;
             return; 
         }
@@ -111,6 +124,8 @@ public class PlayerController : MonoBehaviour
 
             rb.velocity = Vector2.zero;
             rb.AddForce(movement.normalized * playerSettings.dashForce, ForceMode2D.Impulse);
+
+            animator.Play("Dash", -1, 0f);
             playerState = PlayerStates.Dash;
 
             AudioManager.PlayOneShot(playerSettings.dashSound);
@@ -142,15 +157,18 @@ public class PlayerController : MonoBehaviour
 
             Vector2 movement = new Vector2(moveHorizontal * playerSettings.horizontalSpeed, moveVertical * playerSettings.verticalSpeed);
 
+            transform.localScale = new Vector3(movement.x > 0 ? 1 : -1, 1, 1);
+
             rb.velocity = Vector2.zero;
             rb.AddForce(movement.normalized * playerSettings.dashForce, ForceMode2D.Impulse);
+
+            animator.Play("Dash", -1, 0f);
             playerState = PlayerStates.Dash;
 
             AudioManager.PlayOneShot(playerSettings.dashSound);
             StopCoroutine(attackCoroutine);
 
             return;
-
         }
     }
 
@@ -161,12 +179,14 @@ public class PlayerController : MonoBehaviour
         if (stateTimer >= playerSettings.dashDuration)
         {
             ResetState();
+            animator.Play("PlayerWalk", -1, 0f);
             playerState = PlayerStates.Walk;
         }
 
         if (Input.GetKeyDown(KeyCode.X))
         {
             ResetState();
+            animator.SetTrigger("ParryStart");
             playerState = PlayerStates.Parry;
         }
     }
@@ -178,6 +198,18 @@ public class PlayerController : MonoBehaviour
         if (stateTimer >= playerSettings.parryDuration)
         {
             ResetState();
+            animator.SetBool("IsWalking", true);
+            playerState = PlayerStates.Walk;
+        }
+    }
+
+    public void HitState()
+    {
+        animator.SetBool("IsWalking", false);
+        if (stateTimer >= playerSettings.stunDuration)
+        {
+            ResetState();
+            animator.SetBool("IsWalking", true);
             playerState = PlayerStates.Walk;
         }
     }
@@ -259,17 +291,38 @@ public class PlayerController : MonoBehaviour
                 {
                     ResetState();
 
+                    StartCoroutine(ParrySuccess());
+
                     enemy.TakeDamage(0, playerSettings.parryKnockback);
                     ComboManager.ComboAdd(500);
 
+                    animator.SetBool("IsWalking", false);
                     playerState = PlayerStates.Walk;
                 }
 
                 return;
             }
 
+            if (playerState == PlayerStates.Hit)
+                return;
+
+
+            ResetState();
+            rb.velocity = Vector2.zero;
+            animator.SetTrigger("Hit");
+            playerState = PlayerStates.Hit;
+
             ComboManager.TakeDamage(200);
         }
-        
+    }
+
+    private IEnumerator ParrySuccess()
+    {
+        animator.SetTrigger("ParrySuccess");
+        yield return 0;
+
+        Time.timeScale = 0f;
+        yield return new WaitForSecondsRealtime(0.5f);
+        Time.timeScale = 1f;
     }
 }
