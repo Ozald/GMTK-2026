@@ -58,11 +58,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 71c1514a6bd24e1e882cebbe1904ce04, type: 3}
-  m_Name: DriveRyder SDF
+  m_Name: DriveRyder SDF 1
   m_EditorClassIdentifier: 
-  hashCode: -2014573403
+  hashCode: 857853492
   material: {fileID: 3087053250332485682}
-  materialHashCode: -76132251
+  materialHashCode: 1084704404
   m_Version: 1.1.0
   m_SourceFontFileGUID: c5cff0f3cbd6505469cc649704982012
   m_SourceFontFile_EditorRef: {fileID: 12800000, guid: c5cff0f3cbd6505469cc649704982012, type: 3}
@@ -1738,7 +1738,7 @@ Material:
     - _OutlineSoftness: 0
     - _OutlineUVSpeedX: 0
     - _OutlineUVSpeedY: 0
-    - _OutlineWidth: 0.115
+    - _OutlineWidth: 0.076
     - _PerspectiveFilter: 0.875
     - _Reflectivity: 10
     - _ScaleRatioA: 0.9

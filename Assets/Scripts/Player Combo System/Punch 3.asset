@@ -25,4 +25,4 @@ MonoBehaviour:
   enemyKnockback: 12
   comboWindowStart: 0
   comboWindowEnd: 0.7
-  nextAttack: {fileID: 11400000, guid: cd8339ae61e7c1a4a8b3d072229fbcc1, type: 2}
+  nextAttack: {fileID: 0}

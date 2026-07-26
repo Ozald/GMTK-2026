@@ -501,6 +501,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1322368325892707983, guid: fc42ba3eb9485f84a9011220ddc7c98c, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: b959d06c4229e854caa4cbac3679c40f, type: 2}
+    - target: {fileID: 1322368325892707983, guid: fc42ba3eb9485f84a9011220ddc7c98c, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 3087053250332485682, guid: b959d06c4229e854caa4cbac3679c40f, type: 2}
+    - target: {fileID: 1322368325892707983, guid: fc42ba3eb9485f84a9011220ddc7c98c, type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5481266290127684593, guid: fc42ba3eb9485f84a9011220ddc7c98c, type: 3}
       propertyPath: m_Name
       value: Title canvas
