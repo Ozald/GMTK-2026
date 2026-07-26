@@ -320,7 +320,7 @@ SpriteRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 414110698}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -1162,6 +1162,7 @@ GameObject:
   - component: {fileID: 1815300576}
   - component: {fileID: 1815300570}
   - component: {fileID: 1815300577}
+  - component: {fileID: 1815300578}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -1182,6 +1183,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rb: {fileID: 0}
+  minX: -8
+  maxX: 8
   playerSettings: {fileID: 11400000, guid: 1424582a23db16244ab15dafd33ee94f, type: 2}
   playerState: 0
 --- !u!212 &1815300572
@@ -1362,6 +1365,22 @@ MonoBehaviour:
   feet: {fileID: 538057489}
   offset: 0
   precision: 100
+--- !u!114 &1815300578
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1815300569}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c241a6fa45fbede4abc582b9c3c53d3c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shadowPrefab: {fileID: 5036237338572807392, guid: 10142c0feb89cb94dbd906f23ab7e3d1, type: 3}
+  offset: {x: 0, y: -1, z: 0}
+  scale: {x: 1.2, y: 1.2, z: 1.2}
+  currentShadow: {fileID: 0}
 --- !u!1 &1826111077
 GameObject:
   m_ObjectHideFlags: 0
@@ -1668,7 +1687,7 @@ SpriteRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2043097315}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1

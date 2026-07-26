@@ -479,6 +479,11 @@ public class EnemyController : MonoBehaviour
     { 
         float adjustedWindUp = attackWindUp / DifficultyManager.Instance.enemyAttackSpeedMultiplier;
 
+        if (enemyType == EnemyType.Melee || enemyType == EnemyType.Tank)
+        {
+            animator.Play("PrepareAttack", -1, 0f);
+        }
+
         yield return new WaitForSeconds(adjustedWindUp);
 
         animator.SetBool("IsWalking", false);

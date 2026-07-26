@@ -64,7 +64,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: -0.2846253}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -75,7 +75,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 1, y: 3.1735015}
   m_EdgeRadius: 0
 --- !u!1 &1434542537849885695
 GameObject:
@@ -141,7 +141,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -2.74, z: 0}
-  m_LocalScale: {x: 1.2, y: 1.2, z: 1.2}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 923867217514469209}
@@ -189,8 +189,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 3
-  m_Sprite: {fileID: 2085276832, guid: bdb0b2e3c29a041d69a7c63e997fa033, type: 3}
-  m_Color: {r: 0.17895699, g: 0, b: 1, a: 1}
+  m_Sprite: {fileID: 335749103, guid: cf29fac4bf1724198a2cc2e7ab0fdb99, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -263,7 +263,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.5208334, y: 2.6666667}
+    oldSize: {x: 2.6666667, y: 2.6666667}
     newSize: {x: 1, y: 2}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -287,10 +287,13 @@ MonoBehaviour:
   minY: -5
   maxY: 0.5
   borderBuffer: 0.5
+  minX: -8.5
+  maxX: 8.5
   meleeComboReward: 50
   rangedComboReward: 75
   tankComboReward: 100
   rb: {fileID: 0}
+  isKnockedBack: 0
   hitStunDuration: 0.2
   interruptKnockbackForce: 1.5
   speed: 1
@@ -302,6 +305,8 @@ MonoBehaviour:
   roamSpeed: 0.5
   roamMoveSpeed: 0.5
   maxHitsBeforeAttack: 3
+  hitCount: 0
+  canBeInterrupted: 1
   seperationDistance: 2
   seperationStrength: 2
   waitingDistance: 3
@@ -339,7 +344,7 @@ Animator:
   m_GameObject: {fileID: 5326451853265047061}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 2e57bb5f6ad3e074689c8c77d9fe3d75, type: 2}
+  m_Controller: {fileID: 9100000, guid: f898388c76073f240a2c35ee2f36edd6, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -363,6 +368,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shadowPrefab: {fileID: 5036237338572807392, guid: 10142c0feb89cb94dbd906f23ab7e3d1, type: 3}
-  offset: {x: 0, y: -1.2, z: 0}
+  offset: {x: 0, y: -1, z: 0}
   scale: {x: 1.2, y: 1.2, z: 1.2}
   currentShadow: {fileID: 0}

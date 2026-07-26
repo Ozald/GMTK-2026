@@ -292,7 +292,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shadowPrefab: {fileID: 5036237338572807392, guid: 10142c0feb89cb94dbd906f23ab7e3d1, type: 3}
   offset: {x: 0, y: -1, z: 0}
-  scale: {x: 1, y: 1, z: 1}
+  scale: {x: 1.2, y: 1.2, z: 1.2}
   currentShadow: {fileID: 0}
 --- !u!1 &5833730554467071812
 GameObject:

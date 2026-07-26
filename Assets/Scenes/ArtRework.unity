@@ -1316,6 +1316,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 599285205827741788, guid: c604dd123fbe5b44f92784ddd07b10d5, type: 3}
+      propertyPath: isTrackingTime
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1039132820224368766, guid: c604dd123fbe5b44f92784ddd07b10d5, type: 3}
       propertyPath: m_Name
       value: RunStats
