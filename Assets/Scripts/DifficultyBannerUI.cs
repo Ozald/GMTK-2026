@@ -36,6 +36,10 @@ public class DifficultyBannerUI : MonoBehaviour
 
     public IEnumerator PlayBanner()
     {
+        // Reset banner position before playing again
+        banner.anchoredPosition = new Vector2(startX, yPosition);
+
+
         // Move fast until slow down point
         while (banner.anchoredPosition.x < slowDownX)
         {
@@ -61,16 +65,12 @@ public class DifficultyBannerUI : MonoBehaviour
         }
 
 
-        // Slowly drift while staying near center
+        // Stay near center
         float timer = 0;
 
         while (timer < centerTime)
         {
             timer += Time.deltaTime;
-
-            float x = banner.anchoredPosition.x + slowSpeed * Time.deltaTime;
-
-            banner.anchoredPosition = new Vector2(x, yPosition);
 
             yield return null;
         }
@@ -87,6 +87,7 @@ public class DifficultyBannerUI : MonoBehaviour
         }
 
 
-        banner.anchoredPosition = new Vector2(endX, yPosition);
+        // Hide/reset after finishing
+        banner.anchoredPosition = new Vector2(startX, yPosition);
     }
 }

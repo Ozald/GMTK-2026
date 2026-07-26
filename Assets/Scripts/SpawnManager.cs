@@ -72,14 +72,6 @@ public class SpawnManager : MonoBehaviour
 
 
             yield return new WaitForSeconds(currentSpawnInterval);
-
-
-            currentSpawnInterval -= spawnAcceleration;
-
-            currentSpawnInterval = Mathf.Max(
-                currentSpawnInterval,
-                minimumSpawnInterval
-            );
         }
     }
 
@@ -118,6 +110,15 @@ public class SpawnManager : MonoBehaviour
         Instantiate(prefabToSpawn, spawnPosition, Quaternion.identity);
     }
 
+    public void IncreaseDifficulty()
+    {
+        currentSpawnInterval -= 0.3f;
+
+        currentSpawnInterval = Mathf.Max(
+            currentSpawnInterval,
+            minimumSpawnInterval
+        );
+    }
 
     void UpdateEnemyCounts()
     {

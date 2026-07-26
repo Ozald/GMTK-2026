@@ -1300,7 +1300,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 1
-  knockback: 3
+  knockback: 5
   comboGain: 25
   multiHitIncrease: 0.25
   maxMultiHitMultiplier: 3
@@ -3280,7 +3280,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5035162675005861615, guid: 79ab32779082c5449a2fc06a4cc9c580, type: 3}
       propertyPath: interval
-      value: 10
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 7219153566859157143, guid: 79ab32779082c5449a2fc06a4cc9c580, type: 3}
       propertyPath: m_LocalPosition.x

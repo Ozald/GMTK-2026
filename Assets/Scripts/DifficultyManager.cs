@@ -43,6 +43,10 @@ public class DifficultyManager : MonoBehaviour
         enemyAttackSpeedMultiplier += 0.3f;
         comboDecayMultiplier += 0.5f;
 
+        if (SpawnManager.Instance != null)
+        {
+            SpawnManager.Instance.IncreaseDifficulty();
+        }
 
         PlayAdrenalineAnimation();
     }
