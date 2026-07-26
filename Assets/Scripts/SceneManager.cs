@@ -29,6 +29,10 @@ public class SceneChanger : MonoBehaviour
             RunStats.Instance.StartTimer();
         }
 
+        // Resumes FMOD's audio context after user interaction
+        FMODUnity.RuntimeManager.CoreSystem.mixerSuspend();
+        FMODUnity.RuntimeManager.CoreSystem.mixerResume();
+
         SceneManager.LoadScene(1);
     }
 
