@@ -12,6 +12,11 @@ public class PlayerSettings : ScriptableObject
     public float dashForce = 5f;
     public float dashDuration = 0.5f;
 
+    [Header("Parry Settings")]
+    public float parryDuration = 0.75f;
+    public float parryKnockback = 100f;
+    public float parryWindow = 0.4f;
+
     public LayerMask enemyAttackLayer;
 
     [Header("Attacks")]
