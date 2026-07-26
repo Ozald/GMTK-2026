@@ -12,6 +12,11 @@ public class EnemyController : MonoBehaviour
     public static List<EnemyController> allEnemies = new List<EnemyController>();
     public static List<EnemyController> allMeleeEnemies = new List<EnemyController>();
 
+    [Header("Movement Bounds")]
+    [SerializeField] private float minY = -5;
+    [SerializeField] private float maxY = 0.5f;
+    [SerializeField] private float borderBuffer = 0.5f;
+
     [Header("Combo Rewards")]
     public int meleeComboReward = 50;
     public int rangedComboReward = 75;
@@ -148,6 +153,7 @@ public class EnemyController : MonoBehaviour
 
     void Update()
     {
+        ClampYPosition();
         FacePlayer();
 
         switch (enemyState)
@@ -174,6 +180,22 @@ public class EnemyController : MonoBehaviour
                 HitState();
                 break;
         }
+
+
+    }
+
+    private void FixedUpdate()
+    {
+        ClampYPosition();
+    }
+
+    private void ClampYPosition()
+    {
+        Vector3 pos = transform.position;
+
+        pos.y = Mathf.Clamp(pos.y, minY, maxY);
+
+        transform.position = pos;
     }
 
     //private void OnTriggerEnter2D(Collider2D collision)
@@ -242,6 +264,10 @@ public class EnemyController : MonoBehaviour
                 targetPosition,
                 speed * Time.deltaTime
             );
+
+            Vector3 pos = transform.position;
+            pos.y = Mathf.Clamp(pos.y, minY, maxY);
+            transform.position = pos;
         }
         else
         {
@@ -348,13 +374,34 @@ public class EnemyController : MonoBehaviour
         roamTarget = homePosition + new Vector3(0, offset, 0);
 
         Vector3 separation = GetSeperationForce();
+
+        float topLimit = maxY - borderBuffer;
+        float bottomLimit = minY + borderBuffer;
+
+        // Stop vertical separation when near the top/bottom
+        if (transform.position.y >= topLimit && separation.y > 0)
+        {
+            separation.y = 0;
+        }
+
+        if (transform.position.y <= bottomLimit && separation.y < 0)
+        {
+            separation.y = 0;
+        }
+
         Vector3 finalTarget = roamTarget + separation;
+
+        finalTarget.y = Mathf.Clamp(finalTarget.y, minY, maxY);
 
         transform.position = Vector3.MoveTowards(
             transform.position,
             finalTarget,
             roamMoveSpeed * Time.deltaTime
         );
+
+        Vector3 pos = transform.position;
+        pos.y = Mathf.Clamp(pos.y, minY, maxY);
+        transform.position = pos;
 
         if (enemyManager.CanEnemyAttack(this))
         {
@@ -495,12 +542,15 @@ public class EnemyController : MonoBehaviour
             animator.SetBool("IsWalking", false);
 
             if (rb != null && playerTransform != null)
-            if (rb != null && playerTransform != null)
             {
-                Vector2 direction = (transform.position - playerTransform.position).normalized;
-                rb.AddForce(direction * knockback, ForceMode2D.Impulse);
+                float direction = Mathf.Sign(transform.position.x - playerTransform.position.x);
+
+                // Pure horizontal knockback
+                Vector2 knockbackDirection = new Vector2(direction, 0);
+
+                rb.AddForce(knockbackDirection * knockback, ForceMode2D.Impulse);
             }
-            
+
             enemyState = EnemyStates.Hit;
         }
         else if (rageHit)
@@ -615,11 +665,10 @@ public class EnemyController : MonoBehaviour
     {
         Vector3 force = Vector3.zero;
 
-        foreach(EnemyController enemy in allMeleeEnemies){
+        foreach (EnemyController enemy in allMeleeEnemies)
+        {
             if (enemy == this)
-            {
                 continue;
-            }
 
             float distance = Vector3.Distance(transform.position, enemy.transform.position);
 
@@ -627,12 +676,20 @@ public class EnemyController : MonoBehaviour
             {
                 Vector3 away = transform.position - enemy.transform.position;
 
-                if (away != Vector3.zero)
+                if (away.sqrMagnitude > 0.0001f)
                 {
-                    force += away.normalized * (seperationDistance - distance);
+                    away.Normalize();
+
+                    // Reduce vertical pushing but keep some
+                    away.y *= 0.25f;
+
+                    force += away * (seperationDistance - distance);
                 }
             }
         }
+
+        // Prevent separation from being too extreme
+        force.y = Mathf.Clamp(force.y, -0.5f, 0.5f);
 
         return force * seperationStrength;
     }

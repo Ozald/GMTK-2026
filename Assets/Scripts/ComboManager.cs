@@ -129,6 +129,11 @@ public class ComboManager : MonoBehaviour
     {
         Instance.currentCombo += amount;
 
+        if (RunStats.Instance != null)
+        {
+            RunStats.Instance.AddComboGain(amount);
+        }
+
         // Attacking keeps your combo alive
         Instance.decayTimer = 0f;
 

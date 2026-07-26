@@ -19,6 +19,8 @@ public class ComboBarUI : MonoBehaviour
     [SerializeField] private float gradeSlamScale = 1.5f;
     [SerializeField] private float gradeSlamDuration = 0.25f;
 
+    [SerializeField] private float rainbowSpeed = 2f;
+
     private Vector3 gradeOriginalScale;
     private Coroutine gradeSlamCoroutine;
 
@@ -61,6 +63,15 @@ public class ComboBarUI : MonoBehaviour
         }
 
         comboGradeText.text = comboManager.comboGrade.ToString();
+
+        if (comboManager.comboGrade == ComboManager.ComboGrade.SSS)
+        {
+            comboGradeText.color = GetRainbowColor();
+        }
+        else
+        {
+            comboGradeText.color = GetGradeColor(comboManager.comboGrade);
+        }
 
 
         //if (CombatFeed.Instance != null)
@@ -125,5 +136,48 @@ public class ComboBarUI : MonoBehaviour
 
 
         comboGradeText.transform.localScale = gradeOriginalScale;
+    }
+
+    private Color GetGradeColor(ComboManager.ComboGrade grade)
+    {
+        switch (grade)
+        {
+            case ComboManager.ComboGrade.F:
+                return Color.magenta;
+
+            case ComboManager.ComboGrade.D:
+                return Color.cyan;
+
+            case ComboManager.ComboGrade.C:
+                return Color.green;
+
+            case ComboManager.ComboGrade.B:
+                return Color.yellow;
+
+            case ComboManager.ComboGrade.A:
+                return Color.red;
+
+            case ComboManager.ComboGrade.S:
+                return new Color(1f, 0.84f, 0.1f);
+
+            case ComboManager.ComboGrade.SS:
+                return new Color(0.7f, 0.9f, 1f);
+
+            case ComboManager.ComboGrade.SSS:
+                return new Color(1f, 0.84f, 0.1f);
+        }
+
+        return Color.white;
+    }
+
+    private Color GetRainbowColor()
+    {
+        float hue = Mathf.Repeat(Time.time * rainbowSpeed, 1f);
+
+        return Color.HSVToRGB(
+            hue,
+            0.8f,
+            1f
+        );
     }
 }

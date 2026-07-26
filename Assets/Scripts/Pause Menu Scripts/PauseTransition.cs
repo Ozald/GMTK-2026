@@ -20,6 +20,9 @@ public class PauseTransition : MonoBehaviour
 
     private Coroutine settleCoroutine;
 
+    [Header("Hide While Paused")]
+    [SerializeField] private GameObject uiToHide;
+
     private void Start()
     {
         centerPosition = panel.anchoredPosition;
@@ -61,6 +64,9 @@ public class PauseTransition : MonoBehaviour
 
         Time.timeScale = 0f;
 
+        if (uiToHide != null)
+            uiToHide.SetActive(false);
+
         targetPosition = centerPosition + new Vector2(overshootAmount, 0);
 
         foreach (ButtonTransition button in buttons)
@@ -90,6 +96,9 @@ public class PauseTransition : MonoBehaviour
         isPauseOpen = false;
 
         Time.timeScale = 1f;
+
+        if (uiToHide != null)
+            uiToHide.SetActive(true);
 
         if (settleCoroutine != null)
             StopCoroutine(settleCoroutine);
