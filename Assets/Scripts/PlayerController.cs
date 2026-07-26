@@ -144,11 +144,10 @@ public class PlayerController : MonoBehaviour
 
         if (attackCoroutine == null)
         {
-            StopCoroutine(AttackCoroutine());
             attackCoroutine = StartCoroutine(AttackCoroutine());
         }
 
-        if (Input.GetKeyDown(KeyCode.Z) && currentAttack.IsInComboWindow(stateTimer))
+        if (Input.GetKeyDown(KeyCode.Z) && currentAttack.nextAttack != null && currentAttack.IsInComboWindow(stateTimer))
         {
             attackQueued = true;
         }
@@ -173,7 +172,10 @@ public class PlayerController : MonoBehaviour
             AudioManager.PlayOneShot(playerSettings.dashSound);
 
             if (attackCoroutine != null)
+            {
                 StopCoroutine(attackCoroutine);
+                attackCoroutine = null;
+            }
 
             return;
         }
@@ -225,6 +227,8 @@ public class PlayerController : MonoBehaviour
 
     public IEnumerator AttackCoroutine()
     {
+        stateTimer = 0;
+
         AudioManager.PlayOneShot(currentAttack.attackSound);
 
         OverrideClip("DummyAttack", currentAttack.animation);
@@ -234,8 +238,6 @@ public class PlayerController : MonoBehaviour
         
         yield return new WaitForSeconds(currentAttack.comboWindowEnd);
 
-
-        stateTimer = 0f;
         if (attackQueued && currentAttack.nextAttack != null)
         {
             AttackData nextAttack = currentAttack.nextAttack;
@@ -259,7 +261,12 @@ public class PlayerController : MonoBehaviour
     {
         stateTimer = 0f;
         attackQueued = false;
-        attackCoroutine = null;
+
+        if (attackCoroutine != null)
+        {
+            StopCoroutine(attackCoroutine);
+            attackCoroutine = null;
+        }
     }
 
     private void OverrideClip(string originalClipName, AnimationClip newClip)

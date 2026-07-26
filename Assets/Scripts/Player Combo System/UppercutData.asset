@@ -23,6 +23,6 @@ MonoBehaviour:
   damage: 2
   playerKnockback: 10
   enemyKnockback: 12
-  comboWindowStart: 0
+  comboWindowStart: 0.7
   comboWindowEnd: 0.7
   nextAttack: {fileID: 0}
