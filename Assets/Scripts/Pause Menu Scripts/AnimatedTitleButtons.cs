@@ -61,7 +61,7 @@ public class AnimatedTitleButton : MonoBehaviour, IPointerEnterHandler, IPointer
             0
         );
 
-        targetPosition = buttonRect.position + direction * -10f;
+        targetPosition = buttonRect.position;
     }
 
 

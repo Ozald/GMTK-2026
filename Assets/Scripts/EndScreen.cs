@@ -74,6 +74,14 @@ public class EndScreen : MonoBehaviour
         StartCoroutine(PlayEntrance());
     }
 
+    private void Update()
+    {
+        if (resultTextLabels.Length >= 5 &&
+            resultTextLabels[4].text == "SSS")
+        {
+            resultTextLabels[4].color = GetRainbowColor();
+        }
+    }
 
     private void LoadRunStats()
     {
@@ -92,7 +100,9 @@ public class EndScreen : MonoBehaviour
             int finalScore = RunStats.Instance.CalculateFinalScore();
             resultTextLabels[3].text = "Final Score: " + finalScore;
 
-            resultTextLabels[4].text = RunStats.Instance.GetRank();
+            string rank = RunStats.Instance.GetRank();
+            resultTextLabels[4].text = rank;
+            resultTextLabels[4].color = GetGradeColor(rank);
         }
         else
         {
@@ -267,5 +277,44 @@ public class EndScreen : MonoBehaviour
 
         finalText.localScale = finalTextOriginalScale;
         finalText.anchoredPosition = finalTextOriginalPosition;
+    }
+
+    private Color GetGradeColor(string rank)
+    {
+        switch (rank)
+        {
+            case "F":
+                return Color.magenta;
+
+            case "D":
+                return Color.cyan;
+
+            case "C":
+                return Color.green;
+
+            case "B":
+                return Color.yellow;
+
+            case "A":
+                return Color.red;
+
+            case "S":
+                return new Color(1f, 0.84f, 0.1f);
+
+            case "SS":
+                return new Color(0.7f, 0.9f, 1f);
+
+            case "SSS":
+                // Gold initially, rainbow handled in Update()
+                return new Color(1f, 0.84f, 0.1f);
+        }
+
+        return Color.white;
+    }
+
+    private Color GetRainbowColor()
+    {
+        float hue = Mathf.Repeat(Time.time * 2f, 1f);
+        return Color.HSVToRGB(hue, 0.8f, 1f);
     }
 }

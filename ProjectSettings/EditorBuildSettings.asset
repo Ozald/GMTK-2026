@@ -9,6 +9,9 @@ EditorBuildSettings:
     path: Assets/Scenes/TitleScreen.unity
     guid: ee2e4b8818f48ab419b8c5ab8d30505a
   - enabled: 1
-    path: Assets/Scenes/PlayerAttackTest.unity
-    guid: 96027d3e8ed1fab4f812a7fc4bf2cd14
+    path: Assets/Scenes/EnemyAttackTest.unity
+    guid: a72b600d5968aad40bad7684e41a026a
+  - enabled: 1
+    path: Assets/Scenes/EndScreen.unity
+    guid: 90594ab2cea2a0646bd288b18b2a1630
   m_configObjects: {}
