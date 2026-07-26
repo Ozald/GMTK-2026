@@ -165,6 +165,13 @@ public class CombatFeed : MonoBehaviour
 
         UpdateHitCounter();
 
+
+        if (RunStats.Instance != null)
+        {
+            RunStats.Instance.UpdateHighestHitCombo(hitChain);
+        }
+
+
         if (pulseCoroutine != null)
             StopCoroutine(pulseCoroutine);
 

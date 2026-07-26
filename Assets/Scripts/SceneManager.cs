@@ -5,19 +5,47 @@ public class SceneChanger : MonoBehaviour
 {
     public PauseTransition pauseTransition;
 
-    public void LoadNextScene()
+
+    public void LoadTitleScreen()
     {
         StopEverything();
 
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        if (RunStats.Instance != null)
+        {
+            RunStats.Instance.ResetStats();
+        }
+
+        SceneManager.LoadScene(0);
     }
 
-    public void LoadPreviousScene()
+
+    public void LoadGame()
     {
         StopEverything();
 
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
+        if (RunStats.Instance != null)
+        {
+            RunStats.Instance.ResetStats();
+            RunStats.Instance.StartTimer();
+        }
+
+        SceneManager.LoadScene(1);
     }
+
+
+    public void LoadResults()
+    {
+        StopEverything();
+        RunStats.Instance.CalculateFinalScore();
+
+        if (RunStats.Instance != null)
+        {
+            RunStats.Instance.StopTimer();
+        }
+
+        SceneManager.LoadScene(2);
+    }
+
 
     private void StopEverything()
     {
@@ -27,13 +55,14 @@ public class SceneChanger : MonoBehaviour
             pauseTransition.Exit();
         }
 
+
         // Stop FMOD music
         if (AudioManager.instance != null)
         {
             AudioManager.StopCurrentBGMusic();
         }
 
-        // Make sure the next scene isn't frozen
+
         Time.timeScale = 1f;
     }
 }

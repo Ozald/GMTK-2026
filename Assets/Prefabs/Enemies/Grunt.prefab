@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 562665364549987723}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.81, z: 0}
+  m_LocalPosition: {x: 0, y: -1.326, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -46,6 +46,7 @@ GameObject:
   - component: {fileID: 664524517240259180}
   - component: {fileID: 2808248625131217505}
   - component: {fileID: 8716015086488983711}
+  - component: {fileID: 1546163368366304744}
   m_Layer: 0
   m_Name: Grunt
   m_TagString: Untagged
@@ -206,6 +207,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6714daa291b671b40bbcc37890431717, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  minY: -5
+  maxY: 0.5
+  borderBuffer: 0.5
   meleeComboReward: 50
   rangedComboReward: 75
   tankComboReward: 100
@@ -231,6 +235,7 @@ MonoBehaviour:
   attackCooldown: 0.75
   attackWindUp: 0.5
   enemyState: 0
+  flashMaterial: {fileID: 2100000, guid: 107b91b2bad795c4da5b51dc27d418c4, type: 2}
   enemyType: 0
 --- !u!114 &2808248625131217505
 MonoBehaviour:
@@ -268,6 +273,22 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1546163368366304744
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5326451853265047061}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c241a6fa45fbede4abc582b9c3c53d3c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shadowPrefab: {fileID: 5036237338572807392, guid: 10142c0feb89cb94dbd906f23ab7e3d1, type: 3}
+  offset: {x: 0, y: -1, z: 0}
+  scale: {x: 1, y: 1, z: 1}
+  currentShadow: {fileID: 0}
 --- !u!1 &5833730554467071812
 GameObject:
   m_ObjectHideFlags: 0

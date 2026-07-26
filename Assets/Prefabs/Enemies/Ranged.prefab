@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 1636009282792233543}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.87, z: 0}
+  m_LocalPosition: {x: 0, y: -1.313, z: 0}
   m_LocalScale: {x: 1.25, y: 1.25, z: 1.25}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -77,6 +77,7 @@ GameObject:
   - component: {fileID: 8256551479825266091}
   - component: {fileID: 5785951723101498770}
   - component: {fileID: -4639590321074512502}
+  - component: {fileID: 5128351740392364549}
   m_Layer: 0
   m_Name: Ranged
   m_TagString: Untagged
@@ -142,7 +143,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 3
-  m_Sprite: {fileID: -9095717837082945937, guid: 207ee8102dd4143d288186ef0be518ee, type: 3}
+  m_Sprite: {fileID: -1631459143, guid: bdb0b2e3c29a041d69a7c63e997fa033, type: 3}
   m_Color: {r: 1, g: 0.465245, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -216,7 +217,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 2}
+    oldSize: {x: 1.7291666, y: 2.6666667}
     newSize: {x: 1, y: 2}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -237,6 +238,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a707ec11f9a56c34991ac9ba93b90509, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  minY: -5
+  maxY: 0.5
+  borderBuffer: 0.5
   meleeComboReward: 50
   rangedComboReward: 75
   tankComboReward: 100
@@ -262,6 +266,7 @@ MonoBehaviour:
   attackCooldown: 0.5
   attackWindUp: 0.3
   enemyState: 0
+  flashMaterial: {fileID: 2100000, guid: 107b91b2bad795c4da5b51dc27d418c4, type: 2}
   enemyType: 1
   minShootingDistance: 4
   maxShootingDistance: 7
@@ -303,3 +308,19 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &5128351740392364549
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5326451853265047061}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c241a6fa45fbede4abc582b9c3c53d3c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shadowPrefab: {fileID: 5036237338572807392, guid: 10142c0feb89cb94dbd906f23ab7e3d1, type: 3}
+  offset: {x: 0, y: -0.7, z: 0}
+  scale: {x: 1, y: 1, z: 1}
+  currentShadow: {fileID: 0}

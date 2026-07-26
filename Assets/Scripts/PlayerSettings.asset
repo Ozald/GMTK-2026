@@ -16,10 +16,14 @@ MonoBehaviour:
   horizontalSpeed: 5
   dashForce: 15
   dashDuration: 0.3
+  stunDuration: 0.4
+  parryDuration: 0.75
+  parryKnockback: 20
+  parryWindow: 0.4
   enemyAttackLayer:
     serializedVersion: 2
     m_Bits: 8
-  punchAttack: {fileID: 11400000, guid: ce54134a990086945bd39d0d4a6f2ed7, type: 2}
+  punchAttack: {fileID: 11400000, guid: 93a96e554b01945439ec764bb4748bf4, type: 2}
   dashSound:
     Guid:
       Data1: -1477136988
@@ -27,3 +31,17 @@ MonoBehaviour:
       Data3: -473867635
       Data4: -1171959684
     Path: event:/SFX/Dash
+  hitSound:
+    Guid:
+      Data1: -1826954473
+      Data2: 1280398134
+      Data3: -437174615
+      Data4: -1207992705
+    Path: event:/SFX/Punch_Hit
+  parrySound:
+    Guid:
+      Data1: 1713704226
+      Data2: 1277009176
+      Data3: 623417735
+      Data4: 292905054
+    Path: event:/SFX/Parry

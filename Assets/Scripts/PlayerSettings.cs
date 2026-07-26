@@ -11,6 +11,12 @@ public class PlayerSettings : ScriptableObject
     public float horizontalSpeed = 5f;
     public float dashForce = 5f;
     public float dashDuration = 0.5f;
+    public float stunDuration = 0.3f;
+
+    [Header("Parry Settings")]
+    public float parryDuration = 0.75f;
+    public float parryKnockback = 100f;
+    public float parryWindow = 0.4f;
 
     public LayerMask enemyAttackLayer;
 
@@ -19,4 +25,6 @@ public class PlayerSettings : ScriptableObject
 
     [Header("Audio")]
     public EventReference dashSound;
+    public EventReference hitSound;
+    public EventReference parrySound;
 }
