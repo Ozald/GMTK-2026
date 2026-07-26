@@ -24,6 +24,10 @@ public class PlayerController : MonoBehaviour
     private Animator animator;
     private AnimatorOverrideController overrideController;
 
+    [Header("Movement Bounds")]
+    [SerializeField] private float minX = -8f;
+    [SerializeField] private float maxX = 8f;
+
     public PlayerSettings playerSettings;
     public PlayerStates playerState;
 
@@ -70,7 +74,7 @@ public class PlayerController : MonoBehaviour
         {
             animator.Play("PlayerDeath", -1, 0f);
         }
-        
+        ClampPosition();
     }
 
     /********************************************************************************************/
@@ -327,5 +331,12 @@ public class PlayerController : MonoBehaviour
         Time.timeScale = 0f;
         yield return new WaitForSecondsRealtime(0.5f);
         Time.timeScale = 1f;
+    }
+
+    private void ClampPosition()
+    {
+        Vector3 pos = transform.position;
+        pos.x = Mathf.Clamp(pos.x, minX, maxX);
+        transform.position = pos;
     }
 }
