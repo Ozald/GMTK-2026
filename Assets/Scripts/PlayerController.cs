@@ -170,7 +170,9 @@ public class PlayerController : MonoBehaviour
             playerState = PlayerStates.Dash;
 
             AudioManager.PlayOneShot(playerSettings.dashSound);
-            StopCoroutine(attackCoroutine);
+
+            if (attackCoroutine != null)
+                StopCoroutine(attackCoroutine);
 
             return;
         }
@@ -298,8 +300,8 @@ public class PlayerController : MonoBehaviour
                     StartCoroutine(ParrySuccess());
 
                     AudioManager.PlayOneShot(playerSettings.parrySound);
-                    enemy.TakeDamage(0, playerSettings.parryKnockback);
-                    ComboManager.ComboAdd(500);
+                    enemy.TakeDamage(1, playerSettings.parryKnockback);
+                    ComboManager.ComboAdd(1000);
 
                     animator.SetBool("IsWalking", false);
                     playerState = PlayerStates.Walk;
