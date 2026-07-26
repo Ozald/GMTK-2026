@@ -14,7 +14,12 @@ public class YSort : MonoBehaviour
 
     void LateUpdate()
     {
-        spriteRenderer.sortingOrder =
-            Mathf.RoundToInt(-feet.position.y * precision) + offset;
+        if (feet == null)
+        {
+            Debug.LogWarning("Feet transform is not assigned for YSort on " + gameObject.name);
+            return;
+        }
+
+        spriteRenderer.sortingOrder = Mathf.RoundToInt(-feet.position.y * precision) + offset;
     }
 }

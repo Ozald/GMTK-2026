@@ -442,6 +442,7 @@ public class EnemyController : MonoBehaviour
     {
         if (hitCoroutine == null)
         {
+            StopCoroutine(HitCoroutine());
             hitCoroutine = StartCoroutine(HitCoroutine());
         }
     }
