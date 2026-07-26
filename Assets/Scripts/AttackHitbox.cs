@@ -4,6 +4,7 @@ using UnityEngine;
 public class AttackHitbox : MonoBehaviour
 {
     public int damage;
+    public float knockback;
     public int comboGain;
 
     [Header("Multi Hit")]
@@ -35,7 +36,7 @@ public class AttackHitbox : MonoBehaviour
         if (hitEnemies.Contains(enemy))
             return;
 
-        if (transform.position.y > collision.transform.position.y + 0.5f || transform.position.y < collision.transform.position.y - 0.5f)
+        if (transform.position.y > collision.transform.position.y + 1f || transform.position.y < collision.transform.position.y - 1f)
             return;
 
         hitEnemies.Add(enemy);
@@ -44,7 +45,7 @@ public class AttackHitbox : MonoBehaviour
 
         int finalDamage = damage;
 
-        if (enemy.TakeDamage(finalDamage))
+        if (enemy.TakeDamage(finalDamage, knockback))
         {
             float hitMultiplier = ComboManager.GetDamageMultiplier();
             float multiHitMultiplier = GetMultiHitMultiplier();

@@ -443,16 +443,6 @@ public class EnemyController : MonoBehaviour
 
         isKnockedBack = true;
 
-
-        if (rb != null && playerTransform != null)
-        {
-            Vector2 direction =
-                (transform.position - playerTransform.position).normalized;
-
-            rb.AddForce(direction * interruptKnockbackForce, ForceMode2D.Impulse);
-        }
-
-
         yield return new WaitForSeconds(hitStunDuration);
 
 
@@ -475,7 +465,7 @@ public class EnemyController : MonoBehaviour
     }
     #endregion
 
-    public bool TakeDamage(int amount)
+    public bool TakeDamage(int amount, float knockback)
     {
         if (enemyState == EnemyStates.Dead)
             return false;
@@ -485,7 +475,7 @@ public class EnemyController : MonoBehaviour
 
         hitCount++;
 
-        bool rageHit = hitCount >= maxHitsBeforeAttack;
+        bool rageHit = hitCount > maxHitsBeforeAttack;
 
 
         // Only do normal hit flash if it is NOT the rage hit
@@ -503,6 +493,14 @@ public class EnemyController : MonoBehaviour
         {
             previousState = enemyState;
             animator.SetBool("IsWalking", false);
+
+            if (rb != null && playerTransform != null)
+            if (rb != null && playerTransform != null)
+            {
+                Vector2 direction = (transform.position - playerTransform.position).normalized;
+                rb.AddForce(direction * knockback, ForceMode2D.Impulse);
+            }
+            
             enemyState = EnemyStates.Hit;
         }
         else if (rageHit)
