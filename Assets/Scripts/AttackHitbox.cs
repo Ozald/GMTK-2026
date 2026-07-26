@@ -1,62 +1,88 @@
-using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class ResultsScreen : MonoBehaviour
+public class AttackHitbox : MonoBehaviour
 {
-    [SerializeField] private RectTransform resultsText;
+    public int damage;
+    public float knockback;
+    public int comboGain;
 
-    private Vector2 originalPosition;
+    [Header("Multi Hit")]
+    public float multiHitIncrease = 0.25f;
+    public float maxMultiHitMultiplier = 3f;
 
-    private void Awake()
+    private HashSet<EnemyController> hitEnemies = new HashSet<EnemyController>();
+
+
+    private void OnEnable()
     {
-        originalPosition = resultsText.anchoredPosition;
+        hitEnemies.Clear();
     }
 
-    private void Start()
+
+    private void OnDisable()
     {
-        Debug.Log("ResultsScreen started!");
-        PlaySlam();
+        CheckMultiHit();
     }
 
-    public void PlaySlam()
+
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        StopAllCoroutines();
-        StartCoroutine(SlamCoroutine());
-    }
+        EnemyController enemy = collision.GetComponent<EnemyController>();
 
-    private IEnumerator SlamCoroutine()
-    {
-        Vector3 startScale = Vector3.one * 2.2f;
-        Vector3 endScale = Vector3.one;
+        if (enemy == null)
+            return;
 
-        Vector2 endPos = originalPosition;
-        Vector2 startPos = endPos + Vector2.up * 40;
+        if (hitEnemies.Contains(enemy))
+            return;
 
-        float duration = 0.12f;
-        float elapsed = 0f;
+        if (transform.position.y > collision.transform.position.y + 1f || transform.position.y < collision.transform.position.y - 1f)
+            return;
 
-        resultsText.localScale = startScale;
-        resultsText.anchoredPosition = startPos;
+        hitEnemies.Add(enemy);
 
-        while (elapsed < duration)
+        CombatFeed.Instance.AddHit();
+
+        int finalDamage = damage;
+
+        if (enemy.TakeDamage(finalDamage, knockback))
         {
-            elapsed += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsed / duration);
+            float hitMultiplier = ComboManager.GetDamageMultiplier();
+            float multiHitMultiplier = GetMultiHitMultiplier();
 
-            resultsText.localScale = Vector3.Lerp(startScale, endScale, t);
-            resultsText.anchoredPosition = Vector2.Lerp(startPos, endPos, t);
+            int finalComboGain = Mathf.RoundToInt(
+                comboGain * hitMultiplier * multiHitMultiplier
+            );
 
-            yield return null;
+            ComboManager.ComboAdd(finalComboGain);
         }
+    }
 
-        // Small impact bounce
-        resultsText.localScale = Vector3.one * 0.9f;
-        yield return new WaitForSeconds(0.03f);
 
-        resultsText.localScale = Vector3.one * 1.05f;
-        yield return new WaitForSeconds(0.03f);
+    private float GetMultiHitMultiplier()
+    {
+        int targets = hitEnemies.Count;
 
-        resultsText.localScale = Vector3.one;
-        resultsText.anchoredPosition = endPos;
+        if (targets <= 1)
+            return 1f;
+
+
+        float multiplier = 1f + ((targets - 1) * multiHitIncrease);
+
+        return Mathf.Min(
+            multiplier,
+            maxMultiHitMultiplier
+        );
+    }
+
+
+    private void CheckMultiHit()
+    {
+        if (hitEnemies.Count > 1)
+        {
+            CombatFeed.Instance.Add(
+                $"MultiHit (x{hitEnemies.Count})"
+            );
+        }
     }
 }

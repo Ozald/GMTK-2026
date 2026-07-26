@@ -7,7 +7,8 @@ public enum PlayerStates
 {
     Walk,
     Attack,
-    Dash
+    Dash,
+    Parry
 }
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -54,6 +55,9 @@ public class PlayerController : MonoBehaviour
             case PlayerStates.Dash:
                 DashState();
                 break;
+            case PlayerStates.Parry:
+                ParryState();
+                break;
         }
     }
 
@@ -93,6 +97,14 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            ResetState();
+            rb.velocity = Vector2.zero;
+            playerState = PlayerStates.Parry;
+            return; 
+        }
+
         if (Input.GetKeyDown(KeyCode.Space))
         {
             ResetState();
@@ -120,6 +132,26 @@ public class PlayerController : MonoBehaviour
         {
             attackQueued = true;
         }
+
+        if (Input.GetKeyDown(KeyCode.Space) && attackCoroutine != null)
+        {
+            ResetState();
+
+            float moveHorizontal = Input.GetAxisRaw("Horizontal");
+            float moveVertical = Input.GetAxisRaw("Vertical");
+
+            Vector2 movement = new Vector2(moveHorizontal * playerSettings.horizontalSpeed, moveVertical * playerSettings.verticalSpeed);
+
+            rb.velocity = Vector2.zero;
+            rb.AddForce(movement.normalized * playerSettings.dashForce, ForceMode2D.Impulse);
+            playerState = PlayerStates.Dash;
+
+            AudioManager.PlayOneShot(playerSettings.dashSound);
+            StopCoroutine(attackCoroutine);
+
+            return;
+
+        }
     }
 
     public void DashState()
@@ -127,6 +159,23 @@ public class PlayerController : MonoBehaviour
         animator.SetBool("IsWalking", false);
 
         if (stateTimer >= playerSettings.dashDuration)
+        {
+            ResetState();
+            playerState = PlayerStates.Walk;
+        }
+
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            ResetState();
+            playerState = PlayerStates.Parry;
+        }
+    }
+
+    public void ParryState()
+    {
+        animator.SetBool("IsWalking", false);
+
+        if (stateTimer >= playerSettings.parryDuration)
         {
             ResetState();
             playerState = PlayerStates.Walk;
@@ -152,6 +201,7 @@ public class PlayerController : MonoBehaviour
         {
             AttackData nextAttack = currentAttack.nextAttack;
 
+            attackQueued = false;
             currentAttack = nextAttack;
             playerState = PlayerStates.Attack;
 
@@ -188,5 +238,38 @@ public class PlayerController : MonoBehaviour
         }
 
         overrideController.ApplyOverrides(overrides);
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if ((playerSettings.enemyAttackLayer.value & (1 << collision.gameObject.layer)) != 0)
+        {
+            if (transform.position.y > collision.transform.position.y + 0.5f || transform.position.y < collision.transform.position.y - 0.5f)
+                return;
+
+            Debug.Log("Player hit by enemy attack!");
+
+            if (playerState == PlayerStates.Parry && stateTimer <= playerSettings.parryWindow)
+            {
+                Debug.Log("Parried!");
+
+                EnemyController enemy = collision.GetComponentInParent<EnemyController>();
+
+                if (enemy != null)
+                {
+                    ResetState();
+
+                    enemy.TakeDamage(0, playerSettings.parryKnockback);
+                    ComboManager.ComboAdd(500);
+
+                    playerState = PlayerStates.Walk;
+                }
+
+                return;
+            }
+
+            ComboManager.TakeDamage(200);
+        }
+        
     }
 }

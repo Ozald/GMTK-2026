@@ -77,6 +77,8 @@ public class ComboManager : MonoBehaviour
     {
         decayInterval = comboData.defaultDecayInterval;
 
+        currentCombo = (comboData.cGrade + comboData.bGrade) / 2;
+
         comboGrade = CalculateGrade();
         displayGrade = comboGrade;
     }
