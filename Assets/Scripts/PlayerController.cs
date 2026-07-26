@@ -144,6 +144,7 @@ public class PlayerController : MonoBehaviour
 
         if (attackCoroutine == null)
         {
+            StopCoroutine(AttackCoroutine());
             attackCoroutine = StartCoroutine(AttackCoroutine());
         }
 

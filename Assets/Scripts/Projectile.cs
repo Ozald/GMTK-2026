@@ -25,6 +25,9 @@ public class Projectile : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        if (transform.position.y > other.transform.position.y + 1f || transform.position.y < other.transform.position.y - 1f)
+            return;
+
         if (other.CompareTag("Player"))
         {
             // Deal damage here
