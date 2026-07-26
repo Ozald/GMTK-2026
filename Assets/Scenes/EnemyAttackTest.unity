@@ -878,7 +878,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4208372698788155046, guid: 630189768ee3d7b49a06d4917d222d4c, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2294,6 +2294,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 599285205827741788, guid: c604dd123fbe5b44f92784ddd07b10d5, type: 3}
+      propertyPath: isTrackingTime
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1039132820224368766, guid: c604dd123fbe5b44f92784ddd07b10d5, type: 3}
       propertyPath: m_Name
       value: RunStats
@@ -2604,6 +2608,10 @@ PrefabInstance:
     - target: {fileID: 1853482524771069802, guid: 79ab32779082c5449a2fc06a4cc9c580, type: 3}
       propertyPath: m_Name
       value: DifficultyManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 5035162675005861615, guid: 79ab32779082c5449a2fc06a4cc9c580, type: 3}
+      propertyPath: interval
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 7219153566859157143, guid: 79ab32779082c5449a2fc06a4cc9c580, type: 3}
       propertyPath: m_LocalPosition.x

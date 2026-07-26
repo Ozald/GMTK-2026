@@ -13,7 +13,7 @@ public class DifficultyManager : MonoBehaviour
     public float comboDecayMultiplier = 1f;
 
 
-    private float timer;
+    public float timer;
 
 
     private void Awake()
@@ -28,6 +28,7 @@ public class DifficultyManager : MonoBehaviour
 
         if (timer >= interval)
         {
+            Debug.Log("Difficulty Increased");
             IncreaseDifficulty();
             timer = 0;
         }
@@ -38,9 +39,9 @@ public class DifficultyManager : MonoBehaviour
     {
         difficultyLevel++;
 
-        enemyDamageMultiplier += 0.15f;
-        enemyAttackSpeedMultiplier += 0.10f;
-        comboDecayMultiplier += 0.20f;
+        enemyDamageMultiplier += 1;
+        enemyAttackSpeedMultiplier += 0.3f;
+        comboDecayMultiplier += 0.5f;
 
 
         PlayAdrenalineAnimation();
@@ -50,8 +51,6 @@ public class DifficultyManager : MonoBehaviour
     private void PlayAdrenalineAnimation()
     {
         if (DifficultyBannerUI.Instance != null)
-        {
-            DifficultyBannerUI.Instance.PlayBanner();
-        }
+            StartCoroutine(DifficultyBannerUI.Instance.PlayBanner());
     }
 }

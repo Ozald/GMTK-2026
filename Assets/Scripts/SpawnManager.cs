@@ -4,6 +4,7 @@ using UnityEngine;
 public class SpawnManager : MonoBehaviour
 {
     [SerializeField] private int rangedCount;
+    [SerializeField] private int tankCount;
 
     public static SpawnManager Instance;
 
@@ -16,6 +17,7 @@ public class SpawnManager : MonoBehaviour
 
     public GameObject gruntPrefab;
     public GameObject rangedPrefab;
+    public GameObject tankPrefab;
 
     public float leftSpawnX = -10f;
     public float rightSpawnX = 10f;
@@ -90,16 +92,21 @@ public class SpawnManager : MonoBehaviour
 
         float roll = Random.value;
 
-        // 15% chance for ranged, limited to 2
+        // 15% chance for ranged
         if (roll < 0.15f && rangedCount < 2)
         {
             prefabToSpawn = rangedPrefab;
         }
+        // 10% chance for tank
+        else if (roll < 0.25f && tankCount < 2)
+        {
+            prefabToSpawn = tankPrefab;
+        }
+        // Otherwise grunt
         else
         {
             prefabToSpawn = gruntPrefab;
         }
-
 
         bool spawnLeft = Random.value > 0.5f;
 
@@ -108,23 +115,26 @@ public class SpawnManager : MonoBehaviour
 
         Vector3 spawnPosition = new Vector3(x, y, 0);
 
-        Instantiate(
-            prefabToSpawn,
-            spawnPosition,
-            Quaternion.identity
-        );
+        Instantiate(prefabToSpawn, spawnPosition, Quaternion.identity);
     }
 
 
     void UpdateEnemyCounts()
     {
         rangedCount = 0;
+        tankCount = 0;
 
         foreach (EnemyController enemy in EnemyController.allEnemies)
         {
-            if (enemy.enemyType == EnemyController.EnemyType.Ranged)
+            switch (enemy.enemyType)
             {
-                rangedCount++;
+                case EnemyController.EnemyType.Ranged:
+                    rangedCount++;
+                    break;
+
+                case EnemyController.EnemyType.Tank:
+                    tankCount++;
+                    break;
             }
         }
     }
