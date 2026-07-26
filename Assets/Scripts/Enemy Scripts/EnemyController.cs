@@ -17,6 +17,9 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private float maxY = 0.5f;
     [SerializeField] private float borderBuffer = 0.5f;
 
+    [SerializeField] private float minX = -8.5f;
+    [SerializeField] private float maxX = 8.5f;
+
     [Header("Combo Rewards")]
     public int meleeComboReward = 50;
     public int rangedComboReward = 75;
@@ -153,7 +156,7 @@ public class EnemyController : MonoBehaviour
 
     void Update()
     {
-        ClampYPosition();
+        ClampPosition();
         FacePlayer();
 
         switch (enemyState)
@@ -186,16 +189,31 @@ public class EnemyController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        ClampYPosition();
+        ClampPosition();
     }
 
-    private void ClampYPosition()
+    private void ClampPosition()
     {
         Vector3 pos = transform.position;
 
+        pos.x = Mathf.Clamp(pos.x, minX, maxX);
         pos.y = Mathf.Clamp(pos.y, minY, maxY);
 
         transform.position = pos;
+
+        // Stop horizontal knockback if they hit the X border
+        if (rb != null)
+        {
+            if (pos.x <= minX && rb.velocity.x < 0)
+            {
+                rb.velocity = new Vector2(0, rb.velocity.y);
+            }
+
+            if (pos.x >= maxX && rb.velocity.x > 0)
+            {
+                rb.velocity = new Vector2(0, rb.velocity.y);
+            }
+        }
     }
 
     //private void OnTriggerEnter2D(Collider2D collision)
@@ -446,7 +464,9 @@ public class EnemyController : MonoBehaviour
 
     public IEnumerator WaitingCoroutine()
     {
-        yield return new WaitForSeconds(attackCooldown);
+        float adjustedCooldown = attackCooldown / DifficultyManager.Instance.enemyAttackSpeedMultiplier;
+
+        yield return new WaitForSeconds(adjustedCooldown);
 
         animator.SetBool("IsWalking", true);
         enemyState = EnemyStates.Walk;
@@ -459,8 +479,10 @@ public class EnemyController : MonoBehaviour
         {
             spriteRenderer.color = Color.yellow;
         }
+        
+        float adjustedWindUp = attackWindUp / DifficultyManager.Instance.enemyAttackSpeedMultiplier;
 
-        yield return new WaitForSeconds(attackWindUp);
+        yield return new WaitForSeconds(adjustedWindUp);
 
         if (spriteRenderer != null)
         {

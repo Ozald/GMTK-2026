@@ -10,6 +10,8 @@ public class ComboManager : MonoBehaviour
     [Header("Data")]
     public ComboData comboData;
 
+    [SerializeField] private EndScreen endScreen;
+    private bool gameEnded;
 
     [Header("Runtime")]
     public int currentCombo;
@@ -152,6 +154,17 @@ public class ComboManager : MonoBehaviour
         );
 
         Instance.CheckGradeChange();
+
+
+        if (Instance.currentCombo <= 0 && !Instance.gameEnded)
+        {
+            Instance.gameEnded = true;
+
+            if (Instance.endScreen != null)
+            {
+                Instance.endScreen.ShowEndScreen();
+            }
+        }
     }
 
     public static void TakeDamage(int amount)
@@ -365,9 +378,17 @@ public class ComboManager : MonoBehaviour
         }
 
 
+        float difficultyMultiplier = 1f;
+
+        if (DifficultyManager.Instance != null)
+        {
+            difficultyMultiplier = DifficultyManager.Instance.comboDecayMultiplier;
+        }
+
+
         return Mathf.Max(
             comboData.minimumDecayInterval,
-            decayInterval / multiplier
+            decayInterval / (multiplier * difficultyMultiplier)
         );
     }
 
@@ -391,7 +412,7 @@ public class ComboManager : MonoBehaviour
 
         decayInterval = Mathf.Max(
             comboData.minimumDecayInterval,
-            decayInterval
+            decayInterval / decayInterval
         );
     }
 

@@ -41,9 +41,15 @@ public class EndScreen : MonoBehaviour
     private Vector2 finalTextOriginalPosition;
     private Vector3 finalTextOriginalScale;
 
+    [Header("Hide During Results")]
+    [SerializeField] private GameObject uiToHide;
+
+    public static EndScreen Instance;
 
     private void Awake()
     {
+        Instance = this;
+
         menuOriginalPosition = menuPanel.anchoredPosition;
 
         textOriginalPositions = new Vector2[resultsTexts.Length];
@@ -62,6 +68,17 @@ public class EndScreen : MonoBehaviour
 
     private void Start()
     {
+        gameObject.SetActive(false);
+    }
+
+
+    public void ShowEndScreen()
+    {
+        gameObject.SetActive(true);
+
+        if (uiToHide != null)
+            uiToHide.SetActive(false);
+
         LoadRunStats();
 
         foreach (RectTransform text in resultsTexts)
