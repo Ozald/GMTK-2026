@@ -312,7 +312,9 @@ public class PlayerController : MonoBehaviour
             animator.SetTrigger("Hit");
             playerState = PlayerStates.Hit;
 
-            ComboManager.TakeDamage(200);
+            int finalDamage = Mathf.RoundToInt(200 * DifficultyManager.Instance.enemyDamageMultiplier);
+
+            ComboManager.TakeDamage(finalDamage);
         }
     }
 
