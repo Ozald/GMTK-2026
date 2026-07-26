@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a140fdddd2b62c14cbf6234260bc315f, type: 3}
   m_Name: UppercutData
   m_EditorClassIdentifier: 
-  animation: {fileID: 7400000, guid: e89142f2fdd39844695d83c526cc674b, type: 2}
+  animation: {fileID: 7400000, guid: c231a1bcfc038f5428798caafd5ed037, type: 2}
   attackSound:
     Guid:
       Data1: -260372145
