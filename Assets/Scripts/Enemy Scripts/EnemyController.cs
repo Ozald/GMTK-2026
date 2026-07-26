@@ -440,11 +440,6 @@ public class EnemyController : MonoBehaviour
 
     private void HitState()
     {
-        if (hitCoroutine == null)
-        {
-            StopCoroutine(HitCoroutine());
-            hitCoroutine = StartCoroutine(HitCoroutine());
-        }
     }
     #endregion
 
@@ -558,7 +553,15 @@ public class EnemyController : MonoBehaviour
         // Stagger system
         if (!rageHit && canBeInterrupted)
         {
-            previousState = enemyState;
+            if (previousState != EnemyStates.Hit)
+                previousState = enemyState;
+
+            if (hitCoroutine != null)
+            {
+                StopCoroutine(hitCoroutine);
+                hitCoroutine = null;
+            }
+
             animator.SetBool("IsWalking", false);
 
             if (rb != null && playerTransform != null)
@@ -569,6 +572,7 @@ public class EnemyController : MonoBehaviour
                 Vector2 knockbackDirection = new Vector2(direction, 0);
 
                 rb.AddForce(knockbackDirection * knockback, ForceMode2D.Impulse);
+                hitCoroutine = StartCoroutine(HitCoroutine());
             }
 
             enemyState = EnemyStates.Hit;

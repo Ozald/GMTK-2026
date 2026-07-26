@@ -1749,6 +1749,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rb: {fileID: 0}
+  currentAttack: {fileID: 0}
   minX: -8
   maxX: 8
   playerSettings: {fileID: 11400000, guid: 1424582a23db16244ab15dafd33ee94f, type: 2}
@@ -2701,6 +2702,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 936853912564863604, guid: bc892eeeeb66eb84192674e2ecdcbfcb, type: 3}
+      propertyPath: m_UiScaleMode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 936853912564863604, guid: bc892eeeeb66eb84192674e2ecdcbfcb, type: 3}
+      propertyPath: m_ReferenceResolution.x
+      value: 1920
+      objectReference: {fileID: 0}
+    - target: {fileID: 936853912564863604, guid: bc892eeeeb66eb84192674e2ecdcbfcb, type: 3}
+      propertyPath: m_ReferenceResolution.y
+      value: 1080
+      objectReference: {fileID: 0}
     - target: {fileID: 4908672830897925131, guid: bc892eeeeb66eb84192674e2ecdcbfcb, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -2787,11 +2800,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7162753778174520206, guid: bc892eeeeb66eb84192674e2ecdcbfcb, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -657
+      value: -1964
       objectReference: {fileID: 0}
     - target: {fileID: 7162753778174520206, guid: bc892eeeeb66eb84192674e2ecdcbfcb, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -126
+      value: -367
+      objectReference: {fileID: 0}
+    - target: {fileID: 7637750575368624772, guid: bc892eeeeb66eb84192674e2ecdcbfcb, type: 3}
+      propertyPath: m_fontSize
+      value: 95.23
+      objectReference: {fileID: 0}
+    - target: {fileID: 7637750575368624772, guid: bc892eeeeb66eb84192674e2ecdcbfcb, type: 3}
+      propertyPath: m_margin.z
+      value: -922.9754
+      objectReference: {fileID: 0}
+    - target: {fileID: 7637750575368624772, guid: bc892eeeeb66eb84192674e2ecdcbfcb, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 95.23
       objectReference: {fileID: 0}
     - target: {fileID: 8430231964264485143, guid: bc892eeeeb66eb84192674e2ecdcbfcb, type: 3}
       propertyPath: endX
@@ -2799,11 +2824,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8430231964264485143, guid: bc892eeeeb66eb84192674e2ecdcbfcb, type: 3}
       propertyPath: startX
-      value: -1500
+      value: -2000
+      objectReference: {fileID: 0}
+    - target: {fileID: 8430231964264485143, guid: bc892eeeeb66eb84192674e2ecdcbfcb, type: 3}
+      propertyPath: centerX
+      value: -150
+      objectReference: {fileID: 0}
+    - target: {fileID: 8430231964264485143, guid: bc892eeeeb66eb84192674e2ecdcbfcb, type: 3}
+      propertyPath: slowDownX
+      value: -200
       objectReference: {fileID: 0}
     - target: {fileID: 8430231964264485143, guid: bc892eeeeb66eb84192674e2ecdcbfcb, type: 3}
       propertyPath: yPosition
-      value: -150
+      value: -300
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -18,7 +18,7 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public Rigidbody2D rb;
     private Coroutine attackCoroutine;
     private float stateTimer;
-    private AttackData currentAttack;
+    public AttackData currentAttack;
     private bool attackQueued;
     private bool IsWalking;
     private Animator animator;
@@ -320,6 +320,7 @@ public class PlayerController : MonoBehaviour
             animator.SetTrigger("Hit");
             playerState = PlayerStates.Hit;
 
+            AudioManager.PlayOneShot(playerSettings.damageSound);
             int finalDamage = Mathf.RoundToInt(200 * DifficultyManager.Instance.enemyDamageMultiplier);
 
             ComboManager.TakeDamage(finalDamage);

@@ -27,4 +27,5 @@ public class PlayerSettings : ScriptableObject
     public EventReference dashSound;
     public EventReference hitSound;
     public EventReference parrySound;
+    public EventReference damageSound;
 }

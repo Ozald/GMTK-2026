@@ -10,19 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 64e885b972d7e31469209b50794387ff, type: 3}
-  m_Name: Punch 1
+  m_Name: Punch 3
   m_EditorClassIdentifier: 
   animation: {fileID: 7400000, guid: e89142f2fdd39844695d83c526cc674b, type: 2}
   attackSound:
     Guid:
-      Data1: -1892861660
-      Data2: 1094499542
-      Data3: -1718585202
-      Data4: 151581229
-    Path: event:/SFX/Punch
-  damage: 1
-  playerKnockback: 5
-  enemyKnockback: 5
-  comboWindowStart: 0.1
-  comboWindowEnd: 0.3
+      Data1: -260372145
+      Data2: 1081217128
+      Data3: -196171591
+      Data4: -29319506
+    Path: event:/SFX/Uppercut
+  damage: 2
+  playerKnockback: 10
+  enemyKnockback: 12
+  comboWindowStart: 0
+  comboWindowEnd: 0.7
   nextAttack: {fileID: 11400000, guid: cd8339ae61e7c1a4a8b3d072229fbcc1, type: 2}

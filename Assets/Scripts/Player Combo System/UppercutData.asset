@@ -20,7 +20,9 @@ MonoBehaviour:
       Data3: -196171591
       Data4: -29319506
     Path: event:/SFX/Uppercut
+  damage: 2
   playerKnockback: 10
+  enemyKnockback: 12
   comboWindowStart: 0
   comboWindowEnd: 0.7
   nextAttack: {fileID: 0}

@@ -45,3 +45,10 @@ MonoBehaviour:
       Data3: 623417735
       Data4: 292905054
     Path: event:/SFX/Parry
+  damageSound:
+    Guid:
+      Data1: 256876027
+      Data2: 1282735865
+      Data3: 1878969251
+      Data4: 1533228015
+    Path: event:/SFX/Combo Loss

@@ -44,11 +44,12 @@ public class AttackHitbox : MonoBehaviour
         CombatFeed.Instance.AddHit();
 
         int finalDamage = damage;
+        PlayerController player = GetComponentInParent<PlayerController>();
 
-        if (enemy.TakeDamage(finalDamage, knockback))
+        if (player != null)
         {
-            PlayerController player = GetComponentInParent<PlayerController>();
-            if (player != null)
+
+            if (enemy.TakeDamage(finalDamage, player.currentAttack.enemyKnockback))
             {
                 AudioManager.PlayOneShot(player.playerSettings.hitSound);
             }

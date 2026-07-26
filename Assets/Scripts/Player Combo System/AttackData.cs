@@ -10,8 +10,9 @@ public abstract class AttackData : ScriptableObject
     public EventReference attackSound;
 
     [Header("Attack Properties")]
-    //public float damage;
+    public float damage;
     public float playerKnockback;
+    public float enemyKnockback;
     public float comboWindowStart;
     public float comboWindowEnd;
 
