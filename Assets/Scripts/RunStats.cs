@@ -65,16 +65,16 @@ public class RunStats : MonoBehaviour
     {
         int score = CalculateFinalScore();
 
-        if (score >= 10000)
+        if (score >= 100000)
             return "S";
 
-        if (score >= 7500)
+        if (score >= 60000)
             return "A";
 
-        if (score >= 5000)
+        if (score >= 40000)
             return "B";
 
-        if (score >= 2500)
+        if (score >= 20000)
             return "C";
 
         return "D";
