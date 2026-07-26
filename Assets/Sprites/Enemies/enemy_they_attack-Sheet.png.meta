@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 28313e09ef63c48f6a1166b695bd6775
+guid: cb9a0da259a42428eb06d5849757434b
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -97,7 +97,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: enemy_she_walk-Sheet_0
+      name: enemy_they_attack-Sheet_0
       rect:
         serializedVersion: 2
         x: 0
@@ -111,14 +111,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b6c7fbdb3b97842ea869b28d3076bd22
-      internalID: -1571029523
+      spriteID: eb41406f3c352408683c73098eef9e44
+      internalID: 985344147
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: enemy_she_walk-Sheet_1
+      name: enemy_they_attack-Sheet_1
       rect:
         serializedVersion: 2
         x: 128
@@ -132,8 +132,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 8b744953e84d1431bacaa8e4072829ee
-      internalID: -589912575
+      spriteID: 3817420e6221f4de8be4794a26fbe57e
+      internalID: 1062466643
       vertices: []
       indices: 
       edges: []
@@ -149,8 +149,8 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      enemy_she_walk-Sheet_0: -1571029523
-      enemy_she_walk-Sheet_1: -589912575
+      enemy_they_attack-Sheet_0: 985344147
+      enemy_they_attack-Sheet_1: 1062466643
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
