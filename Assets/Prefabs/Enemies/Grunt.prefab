@@ -46,6 +46,7 @@ GameObject:
   - component: {fileID: 664524517240259180}
   - component: {fileID: 2808248625131217505}
   - component: {fileID: 8716015086488983711}
+  - component: {fileID: 1546163368366304744}
   m_Layer: 0
   m_Name: Grunt
   m_TagString: Untagged
@@ -268,6 +269,22 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1546163368366304744
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5326451853265047061}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c241a6fa45fbede4abc582b9c3c53d3c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shadowPrefab: {fileID: 5036237338572807392, guid: 10142c0feb89cb94dbd906f23ab7e3d1, type: 3}
+  offset: {x: 0, y: -1, z: 0}
+  scale: {x: 1, y: 1, z: 1}
+  currentShadow: {fileID: 0}
 --- !u!1 &5833730554467071812
 GameObject:
   m_ObjectHideFlags: 0

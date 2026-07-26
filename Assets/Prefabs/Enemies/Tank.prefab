@@ -123,6 +123,7 @@ GameObject:
   - component: {fileID: 664524517240259180}
   - component: {fileID: 5025818846116210325}
   - component: {fileID: 6475960721559841603}
+  - component: {fileID: 2210151075648834926}
   m_Layer: 0
   m_Name: Tank
   m_TagString: Untagged
@@ -345,3 +346,19 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &2210151075648834926
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5326451853265047061}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c241a6fa45fbede4abc582b9c3c53d3c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shadowPrefab: {fileID: 5036237338572807392, guid: 10142c0feb89cb94dbd906f23ab7e3d1, type: 3}
+  offset: {x: 0, y: -1.2, z: 0}
+  scale: {x: 1.2, y: 1.2, z: 1.2}
+  currentShadow: {fileID: 0}

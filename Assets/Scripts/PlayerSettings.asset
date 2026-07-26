@@ -16,6 +16,7 @@ MonoBehaviour:
   horizontalSpeed: 5
   dashForce: 15
   dashDuration: 0.3
+  stunDuration: 0.4
   parryDuration: 0.75
   parryKnockback: 20
   parryWindow: 0.4
