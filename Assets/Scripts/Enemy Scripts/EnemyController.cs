@@ -85,6 +85,8 @@ public class EnemyController : MonoBehaviour
     private Animator animator;
     private AnimatorOverrideController overrideController;
 
+    public Material flashMaterial;
+
     public enum EnemyStates
     {
         Walk,
@@ -455,17 +457,7 @@ public class EnemyController : MonoBehaviour
 
     public IEnumerator PreparingAttackCoroutine()
     {
-        if (spriteRenderer != null)
-        {
-            spriteRenderer.color = Color.yellow;
-        }
-
         yield return new WaitForSeconds(attackWindUp);
-
-        if (spriteRenderer != null)
-        {
-            spriteRenderer.color = originalColor;
-        }
 
         animator.SetBool("IsWalking", false);
         enemyState = EnemyStates.Attack;
@@ -572,15 +564,19 @@ public class EnemyController : MonoBehaviour
 
     private IEnumerator HitFlash()
     {
-        if (spriteRenderer == null)
+        if (spriteRenderer == null || flashMaterial == null)
             yield break;
 
-        spriteRenderer.color = Color.black;
+        Material originalMaterial = spriteRenderer.material;
+        Color originalColor = spriteRenderer.color;
 
-        yield return new WaitForSeconds(0.3f);
+        spriteRenderer.material = flashMaterial;
+        spriteRenderer.color = Color.white;
 
-        if (enemyState != EnemyStates.Dead)
-            spriteRenderer.color = originalColor;
+        yield return new WaitForSeconds(0.1f);
+
+        spriteRenderer.material = originalMaterial;
+        spriteRenderer.color = originalColor;
 
         hitFlashCoroutine = null;
     }

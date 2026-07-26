@@ -31,3 +31,17 @@ MonoBehaviour:
       Data3: -473867635
       Data4: -1171959684
     Path: event:/SFX/Dash
+  hitSound:
+    Guid:
+      Data1: -1826954473
+      Data2: 1280398134
+      Data3: -437174615
+      Data4: -1207992705
+    Path: event:/SFX/Punch_Hit
+  parrySound:
+    Guid:
+      Data1: 1713704226
+      Data2: 1277009176
+      Data3: 623417735
+      Data4: 292905054
+    Path: event:/SFX/Parry

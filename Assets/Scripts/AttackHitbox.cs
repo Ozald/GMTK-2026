@@ -47,6 +47,12 @@ public class AttackHitbox : MonoBehaviour
 
         if (enemy.TakeDamage(finalDamage, knockback))
         {
+            PlayerController player = GetComponentInParent<PlayerController>();
+            if (player != null)
+            {
+                AudioManager.PlayOneShot(player.playerSettings.hitSound);
+            }
+
             float hitMultiplier = ComboManager.GetDamageMultiplier();
             float multiHitMultiplier = GetMultiHitMultiplier();
 

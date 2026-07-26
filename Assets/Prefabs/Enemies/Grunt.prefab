@@ -207,6 +207,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6714daa291b671b40bbcc37890431717, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  minY: -5
+  maxY: 0.5
+  borderBuffer: 0.5
   meleeComboReward: 50
   rangedComboReward: 75
   tankComboReward: 100
@@ -232,6 +235,7 @@ MonoBehaviour:
   attackCooldown: 0.75
   attackWindUp: 0.5
   enemyState: 0
+  flashMaterial: {fileID: 2100000, guid: 107b91b2bad795c4da5b51dc27d418c4, type: 2}
   enemyType: 0
 --- !u!114 &2808248625131217505
 MonoBehaviour:

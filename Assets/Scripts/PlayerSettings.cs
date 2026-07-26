@@ -25,4 +25,6 @@ public class PlayerSettings : ScriptableObject
 
     [Header("Audio")]
     public EventReference dashSound;
+    public EventReference hitSound;
+    public EventReference parrySound;
 }
