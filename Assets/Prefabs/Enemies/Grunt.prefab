@@ -112,8 +112,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 3
-  m_Sprite: {fileID: -625573334, guid: 4feee12f58a2bb04f9985a93da736a2b, type: 3}
-  m_Color: {r: 0, g: 1, b: 0.08543229, a: 1}
+  m_Sprite: {fileID: 1404373492, guid: 659eeb8c871314442bc9cedbba1f6acd, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -186,7 +186,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.25, y: 2.6666667}
+    oldSize: {x: 2.6666667, y: 2.6666667}
     newSize: {x: 1, y: 2}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -210,6 +210,8 @@ MonoBehaviour:
   minY: -5
   maxY: 0.5
   borderBuffer: 0.5
+  minX: -8.5
+  maxX: 8.5
   meleeComboReward: 50
   rangedComboReward: 75
   tankComboReward: 100

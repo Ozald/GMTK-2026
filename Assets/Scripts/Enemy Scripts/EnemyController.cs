@@ -34,7 +34,7 @@ public class EnemyController : MonoBehaviour
     private Coroutine interruptFlashCoroutine;
     public Rigidbody2D rb;
 
-    private bool isKnockedBack = false;
+    public bool isKnockedBack = false;
 
     private SpriteRenderer spriteRenderer;
     private Color originalColor;
@@ -59,8 +59,8 @@ public class EnemyController : MonoBehaviour
     private Vector3 roamStartPlayerPosition;
 
     public int maxHitsBeforeAttack = 3;
-    private int hitCount = 0;
-    private bool canBeInterrupted = true;
+    public int hitCount = 0;
+    public bool canBeInterrupted = true;
 
     float roamSide;
     float roamDistance;
@@ -85,7 +85,7 @@ public class EnemyController : MonoBehaviour
 
     protected Transform playerTransform;
 
-    private Animator animator;
+    protected Animator animator;
     private AnimatorOverrideController overrideController;
 
     public Material flashMaterial;

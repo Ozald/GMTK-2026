@@ -1,64 +1,100 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class RangedEnemyController : EnemyController
 {
-
+    [Header("Ranged Settings")]
     public float minShootingDistance = 4f;
     public float maxShootingDistance = 7f;
 
     private float preferredShootingDistance;
+
     public GameObject projectilePrefab;
     public Transform firePoint;
 
-    void Awake()
+
+    protected override void Start()
     {
-        preferredShootingDistance = Random.Range(minShootingDistance, maxShootingDistance);
+        base.Start();
+
+        preferredShootingDistance = Random.Range(
+            minShootingDistance,
+            maxShootingDistance
+        );
+
+        // Ranged enemies wait farther away
+        waitingDistance = preferredShootingDistance;
+        attackDistance = preferredShootingDistance;
     }
 
     protected override void WalkState()
     {
+        if (isKnockedBack)
+            return;
+
         float xDistance = Mathf.Abs(transform.position.x - playerTransform.position.x);
         float yDistance = Mathf.Abs(transform.position.y - playerTransform.position.y);
 
-        Vector3 targetPosition = transform.position;
-
-        if (yDistance > laneTolerance)
-        {
-            targetPosition.y = playerTransform.position.y;
-        }
-
         float side = Mathf.Sign(transform.position.x - playerTransform.position.x);
 
-        targetPosition.x = playerTransform.position.x + side * preferredShootingDistance;
+        Vector3 targetPosition = playerTransform.position +
+            Vector3.right * side * preferredShootingDistance;
+
+        // Match player's lane
+        targetPosition.y = playerTransform.position.y;
 
 
-        transform.position = Vector3.MoveTowards(
+        float distance = Vector3.Distance(
             transform.position,
-            targetPosition,
-            speed * Time.deltaTime
+            targetPosition
         );
 
-        if (xDistance <= preferredShootingDistance && yDistance <= laneTolerance)
+
+        if (distance > stoppingDistance)
         {
+            transform.position = Vector3.MoveTowards(
+                transform.position,
+                targetPosition,
+                speed * Time.deltaTime
+            );
+
+            animator.SetBool("IsWalking", true);
+        }
+        else
+        {
+            animator.SetBool("IsWalking", false);
+
+            // Ready to shoot
             enemyState = EnemyStates.ReadyToAttack;
         }
     }
 
     protected override IEnumerator AttackCoroutine()
     {
-        yield return new WaitForSeconds(attackWindUp);
+        animator.Play("AttackState", -1, 0f);
 
+        // Wait until the middle of the animation
+        yield return new WaitForSeconds(attackWindUp * 0.5f);
+
+        // Fire projectile here
         Shoot();
 
-        yield return new WaitForSeconds(attackAnimationLength);
+        // Finish the rest of the animation
+        yield return new WaitForSeconds(attackAnimationLength - (attackWindUp * 0.5f));
+
+
+        hitCount = 0;
+        canBeInterrupted = true;
+
+        animator.SetBool("IsWalking", false);
 
         enemyState = EnemyStates.Waiting;
+
         attackCoroutine = null;
     }
 
-    void Shoot()
+
+    private void Shoot()
     {
         GameObject projectile = Instantiate(
             projectilePrefab,
@@ -66,8 +102,12 @@ public class RangedEnemyController : EnemyController
             transform.rotation
         );
 
+
         Projectile projectileScript = projectile.GetComponent<Projectile>();
 
-        projectileScript.Initialize(transform.right);
+        if (projectileScript != null)
+        {
+            projectileScript.Initialize(transform.right);
+        }
     }
 }

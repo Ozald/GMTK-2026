@@ -1,11 +1,9 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
 {
     [SerializeField] private int rangedCount;
-    [SerializeField] private int tankCount;
 
     public static SpawnManager Instance;
 
@@ -18,7 +16,6 @@ public class SpawnManager : MonoBehaviour
 
     public GameObject gruntPrefab;
     public GameObject rangedPrefab;
-    public GameObject tankPrefab;
 
     public float leftSpawnX = -10f;
     public float rightSpawnX = 10f;
@@ -26,6 +23,7 @@ public class SpawnManager : MonoBehaviour
     public float[] lanes;
 
     private float currentSpawnInterval;
+
 
     private void Awake()
     {
@@ -39,17 +37,19 @@ public class SpawnManager : MonoBehaviour
         }
     }
 
-    // Start is called before the first frame update
+
     void Start()
     {
         currentSpawnInterval = startingSpawnInterval;
         StartCoroutine(SpawnRoutine());
     }
 
+
     private void Update()
     {
         UpdateEnemyCounts();
     }
+
 
     IEnumerator SpawnRoutine()
     {
@@ -61,6 +61,7 @@ public class SpawnManager : MonoBehaviour
 
                 yield return new WaitForSeconds(0.5f);
             }
+
 
             if (EnemyController.allEnemies.Count < maxEnemies)
             {
@@ -89,20 +90,16 @@ public class SpawnManager : MonoBehaviour
 
         float roll = Random.value;
 
-        if (roll < 0.10f && tankCount < 2)
-        {
-            prefabToSpawn = tankPrefab;
-        }
-
-        else if (roll < 0.25f && rangedCount < 2)
+        // 15% chance for ranged, limited to 2
+        if (roll < 0.15f && rangedCount < 2)
         {
             prefabToSpawn = rangedPrefab;
         }
-
         else
         {
             prefabToSpawn = gruntPrefab;
         }
+
 
         bool spawnLeft = Random.value > 0.5f;
 
@@ -111,27 +108,24 @@ public class SpawnManager : MonoBehaviour
 
         Vector3 spawnPosition = new Vector3(x, y, 0);
 
-        Instantiate(prefabToSpawn, spawnPosition, Quaternion.identity);
+        Instantiate(
+            prefabToSpawn,
+            spawnPosition,
+            Quaternion.identity
+        );
     }
+
 
     void UpdateEnemyCounts()
     {
         rangedCount = 0;
-        tankCount = 0;
 
         foreach (EnemyController enemy in EnemyController.allEnemies)
         {
-            switch (enemy.enemyType)
+            if (enemy.enemyType == EnemyController.EnemyType.Ranged)
             {
-                case EnemyController.EnemyType.Ranged:
-                    rangedCount++;
-                    break;
-
-                case EnemyController.EnemyType.Tank:
-                    tankCount++;
-                    break;
+                rangedCount++;
             }
         }
-
     }
 }
