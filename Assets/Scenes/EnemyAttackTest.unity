@@ -2439,6 +2439,26 @@ PrefabInstance:
       propertyPath: comboManager
       value: 
       objectReference: {fileID: 413241473}
+    - target: {fileID: 4822296367037282140, guid: ee0b924c03616b54c80a5273a9f356fc, type: 3}
+      propertyPath: sfxComboSSS.Path
+      value: event:/SFX/SSS SFX
+      objectReference: {fileID: 0}
+    - target: {fileID: 4822296367037282140, guid: ee0b924c03616b54c80a5273a9f356fc, type: 3}
+      propertyPath: sfxComboSSS.Guid.Data1
+      value: 91571020
+      objectReference: {fileID: 0}
+    - target: {fileID: 4822296367037282140, guid: ee0b924c03616b54c80a5273a9f356fc, type: 3}
+      propertyPath: sfxComboSSS.Guid.Data2
+      value: 1277849779
+      objectReference: {fileID: 0}
+    - target: {fileID: 4822296367037282140, guid: ee0b924c03616b54c80a5273a9f356fc, type: 3}
+      propertyPath: sfxComboSSS.Guid.Data3
+      value: -83785849
+      objectReference: {fileID: 0}
+    - target: {fileID: 4822296367037282140, guid: ee0b924c03616b54c80a5273a9f356fc, type: 3}
+      propertyPath: sfxComboSSS.Guid.Data4
+      value: 1597754653
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

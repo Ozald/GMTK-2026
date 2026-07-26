@@ -1,3 +1,4 @@
+using FMODUnity;
 using System.Collections;
 using TMPro;
 using UnityEngine;
@@ -9,6 +10,7 @@ public class ComboBarUI : MonoBehaviour
 
     public TextMeshProUGUI comboGradeText;
     public TextMeshProUGUI comboNumberText;
+    public EventReference sfxComboSSS;
 
     public ComboManager comboManager;
 
@@ -90,6 +92,10 @@ public class ComboBarUI : MonoBehaviour
 
         comboGradeText.transform.localScale = Vector3.zero;
 
+        if (ComboManager.Instance.comboGrade == ComboManager.ComboGrade.SSS)
+        {
+            AudioManager.PlayOneShot(sfxComboSSS, 0.5f);
+        }
 
         while (timer < gradeSlamDuration)
         {

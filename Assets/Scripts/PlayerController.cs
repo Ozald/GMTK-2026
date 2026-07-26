@@ -293,6 +293,7 @@ public class PlayerController : MonoBehaviour
 
                     StartCoroutine(ParrySuccess());
 
+                    AudioManager.PlayOneShot(playerSettings.parrySound);
                     enemy.TakeDamage(0, playerSettings.parryKnockback);
                     ComboManager.ComboAdd(500);
 
